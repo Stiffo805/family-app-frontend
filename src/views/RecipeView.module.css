@@ -1,0 +1,92 @@
+.recipeView {
+  display: flex;
+  justify-content: center;
+
+  padding: 50px 0;
+}
+
+.recipeContainer {
+  background-color: var(--white1);
+
+  width: clamp(360px, 50vw, 1080px);
+  padding: 40px;
+  border-radius: var(--rounded1);
+
+  & > *:not(:last-child) {
+    margin-bottom: 25px;
+  }
+
+  .mainImage {
+    width: 100%;
+    border-radius: var(--rounded1);
+  }
+
+  header {
+    color: var(--brown1);
+    font-family: var(--ff2);
+    font-weight: var(--fw1);
+    font-size: 28px;
+  }
+
+  header:not(.mainHeader) {
+    margin-bottom: 20px;
+  }
+
+  .mainHeader {
+    font-weight: var(--fw1);
+    color: var(--stone4);
+    line-height: 1;
+  }
+
+  .paragraph {
+    color: var(--stone3);
+    font-weight: var(--fw1);
+  }
+
+  .preparationTimeHeader {
+    font-family: var(--ff1);
+    font-weight: var(--fw2);
+    font-size: 20px;
+    color: var(--rose2);
+    margin-bottom: 12px;
+  }
+
+  .preparationTimeSection {
+    background-color: var(--rose1);
+    padding: 30px;
+  }
+
+  hr {
+    background-color: var(--stone2);
+  }
+
+  table {
+    border-collapse: collapse;
+
+    width: 100%;
+    margin-top: 20px;
+
+    tbody > tr {
+      & > :first-child {
+        padding-left: 25px;
+        width: 50%;
+        color: var(--stone3);
+        font-weight: var(--fw1);
+      }
+
+      & > td {
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+
+      & > :last-child {
+        color: var(--brown1);
+        font-weight: var(--fw3);
+      }
+    }
+
+    & > tbody > :not(:last-child) > td {
+      border-bottom: 2px solid var(--stone2);
+    }
+  }
+}

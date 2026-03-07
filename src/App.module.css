@@ -1,0 +1,5 @@
+.appContainer {
+  background-color: var(--stone1);
+  min-height: 100vh;
+  font-family: var(--ff1);
+}

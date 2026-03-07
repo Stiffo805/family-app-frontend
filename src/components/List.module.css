@@ -1,0 +1,22 @@
+ul,
+  ol {
+    & > li:not(:last-child) {
+      margin-bottom: 10px;
+    }
+
+    & > li {
+      margin-left: 25px;
+      padding-left: 20px;
+      color: var(--rose2);
+      font-weight: var(--fw2);
+
+      & > .listItemName {
+        font-weight: var(--fw3);
+      }
+
+      & > span {
+        color: var(--stone3);
+        font-weight: var(--fw1);
+      }
+    }
+  }

@@ -1,0 +1,19 @@
+:root {
+  --white1: hsl(0, 0%, 100%);
+  --stone1: hsl(30, 54%, 90%);
+  --stone2: hsl(30, 18%, 87%);
+  --stone3: hsl(30, 10%, 34%);
+  --stone4: hsl(24, 5%, 18%);
+  --brown1: hsl(14, 45%, 36%);
+  --rose1: hsl(330, 100%, 98%);
+  --rose2: hsl(332, 51%, 32%);
+
+  --fs-paragraph: 16px;
+  --fw1: 400;
+  --fw2: 600;
+  --fw3: 700;
+  --ff1: Outfit, serif;
+  --ff2: Young-Serif, sans-serif;
+
+  --rounded1: 15px;
+}
