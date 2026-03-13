@@ -38,7 +38,7 @@ jobs:
           npm run build
           cp dist/index.html dist/404.html
         env:
-          VITE_BACKEND_URL: "https://family-app-backend-bisc.onrender.com/"
+          VITE_BACKEND_URL: "https://family-app-backend-bisc.onrender.com"
       - name: List files in dist
         run: ls -R ./dist
       - name: Setup Pages
