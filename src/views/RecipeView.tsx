@@ -56,7 +56,7 @@ const RecipeView = () => {
 
   return (
     <div className={styles.recipeView}>
-      <GoBackArrow targetUrl='recipes' />
+      <GoBackArrow targetUrl='/recipes' />
       {isLoading ? (
         <Spinner />
       ) : (
