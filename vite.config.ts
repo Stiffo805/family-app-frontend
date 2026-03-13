@@ -7,7 +7,7 @@ const root = path.resolve(__dirname, 'src')
 const publicPath = path.resolve(__dirname, 'public')
 
 export default defineConfig({
-  base: '/family-app-frontend/',
+  base: '/frontend/',
   plugins: [react()],
   resolve: {
     alias: {
