@@ -1,8 +1,11 @@
 :root {
   --white1: hsl(0, 0%, 100%);
+  --white2: hsl(0, 0%, 90%);
   --stone1: hsl(30, 54%, 90%);
   --stone2: hsl(30, 18%, 87%);
+  --stone2-hover: hsl(30, 18%, 80%);
   --stone3: hsl(30, 10%, 34%);
+  --stone3-hover: hsl(30, 10%, 40%);
   --stone4: hsl(24, 5%, 18%);
   --brown1: hsl(14, 45%, 36%);
   --rose1: hsl(330, 100%, 98%);

@@ -1,6 +1,7 @@
 .recipeView {
   display: flex;
   justify-content: center;
+  min-height: 100vh;
 
   padding: 50px 0;
 }
@@ -19,6 +20,31 @@
   .mainImage {
     width: 100%;
     border-radius: var(--rounded1);
+  }
+
+  .authorHeader {
+    font-size: 14px;
+    color: var(--stone3)
+  }
+
+  .mainHeaderContainer {
+    display: flex;
+    justify-content: space-between;
+
+    & > button {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background-color: var(--stone2);
+      padding: 0 10px;
+      border-width: 0;
+      border-radius: 10px;
+
+      &:hover:not(:disabled) {
+        background-color: var(--stone2-hover);
+        cursor: pointer;
+      }
+    }
   }
 
   header {
@@ -49,6 +75,10 @@
     font-size: 20px;
     color: var(--rose2);
     margin-bottom: 12px;
+
+    .preparationTime {
+      color: var(--stone3);
+    }
   }
 
   .preparationTimeSection {

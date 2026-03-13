@@ -3,3 +3,8 @@
   min-height: 100vh;
   font-family: var(--ff1);
 }
+
+.footer {
+  text-align: center;
+  padding-bottom: 10px;
+}
