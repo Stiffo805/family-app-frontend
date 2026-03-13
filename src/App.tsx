@@ -6,9 +6,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 import RecipesView from '@src/views/RecipesView'
 
 const router = createBrowserRouter([
-  { path: '/family-app-frontend/recipes', Component: RecipesView },
-  { path: '/family-app-frontend/recipes/:recipeId', Component: RecipeView }
-])
+  { path: '/recipes', Component: RecipesView },
+  { path: '/recipes/:recipeId', Component: RecipeView }
+], {
+  basename: import.meta.env.BASE_URL
+})
 
 function App() {
   return (
