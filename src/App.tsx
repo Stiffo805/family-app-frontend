@@ -2,13 +2,16 @@ import RecipeView from '@src/views/RecipeView'
 import styles from '@src/App.module.css'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from '@src/api/queryClient'
-import { createBrowserRouter, RouterProvider } from 'react-router'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router'
 import RecipesView from '@src/views/RecipesView'
 
 const router = createBrowserRouter([
-  { path: '/family-app-frontend/recipes', Component: RecipesView },
-  { path: '/family-app-frontend/recipes/:recipeId', Component: RecipeView }
-])
+  { path: '/', element: <Navigate to="/recipes" replace /> },
+  { path: '/recipes', Component: RecipesView },
+  { path: '/recipes/:recipeId', Component: RecipeView }
+], {
+  basename: import.meta.env.BASE_URL
+})
 
 function App() {
   return (

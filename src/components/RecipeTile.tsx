@@ -45,7 +45,7 @@ const RecipeTile = (props: RecipeTileProps) => {
     <>
       <div
         className={styles.recipeContainer}
-        onClick={() => navigate(`/family-app-frontend/recipes/${props.recipe.id}`)}
+        onClick={() => navigate(`/recipes/${props.recipe.id}`)}
       >
         <div className={styles.titleContainer}>
           <header className={styles.titleHeader}>
