@@ -9,7 +9,7 @@
 .recipeContainer {
   background-color: var(--white1);
 
-  width: clamp(360px, 50vw, 1080px);
+  width: clamp(360px, 60vw, 1200px);
   padding: 40px;
   border-radius: var(--rounded1);
 
@@ -30,21 +30,6 @@
   .mainHeaderContainer {
     display: flex;
     justify-content: space-between;
-
-    & > button {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      background-color: var(--stone2);
-      padding: 0 10px;
-      border-width: 0;
-      border-radius: 10px;
-
-      &:hover:not(:disabled) {
-        background-color: var(--stone2-hover);
-        cursor: pointer;
-      }
-    }
   }
 
   header {
