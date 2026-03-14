@@ -1,4 +1,4 @@
-import { apiUrl } from '@src/api/baseUrl'
+import { axiosClient } from '@src/api/axios'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
@@ -17,11 +17,12 @@ const useGetRecipesList = () => {
   const [isUsingLocalData, setIsUsingLocalData] = useState(false)
 
   const getRecipes = (): Promise<RecipesInfosList> =>
-    fetch(`${apiUrl}/recipes`)
+    axiosClient
+      .get(`/recipes`)
       .then((response) => {
-        if (!response.ok) throw new Error('Network response was not ok')
+        if (!response.data) throw new Error('Network response was not ok')
         setIsUsingLocalData(false)
-        return response.json()
+        return response.data
       })
       .catch(() => {
         const saved = localStorage.getItem('recipes')

@@ -8,9 +8,18 @@ type ParsedDuration = {
 }
 
 export const parseDuration = (duration: string) => {
-  const durationArr = duration.split(':')
+  console.log('duration: ', duration)
+  let days = 0
+  let durationArr
+  if (duration.includes(' ')) {
+    days = Number(duration.slice(0, duration.indexOf(' ')))
+    durationArr = duration.slice(duration.indexOf(' ')).split(':')
+  } else {
+    durationArr = duration.split(':')
+  }
+
   return {
-    hours: Number(durationArr[0]),
+    hours: Number(durationArr[0]) + days * 24,
     minutes: Number(durationArr[1]),
     seconds: Number(durationArr[2])
   }
