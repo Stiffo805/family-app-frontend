@@ -1,0 +1,53 @@
+button {
+  border: none;
+  padding: 10px;
+
+  border-radius: 5px;
+
+  position: relative;
+
+  &.primary {
+    background-color: var(--stone2);
+  }
+
+  &.secondary {
+    background: none;
+  }
+
+  &:hover:not(:disabled) {
+    cursor: pointer;
+    background-color: var(--white2);
+  }
+
+  .tooltip {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    background-color: var(--white2);
+    opacity: 0.9;
+    z-index: 100;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  &:hover .tooltip {
+    display: block;
+  }
+
+  & > div {
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    align-items: center;
+  }
+}
+
+.circleButton {
+  &:hover:not(:disabled) {
+    border-radius: 50%;
+  }
+}

@@ -14,6 +14,7 @@ import { Save } from 'lucide-react'
 import useRecipesOffline from '@src/api/hooks/useRecipesOffline'
 import Spinner from '@src/components/Spinner'
 import diff from 'microdiff'
+import ButtonWithIcon from '@src/components/ButtonWithIcon'
 
 const RecipeView = () => {
   const params = useParams()
@@ -38,10 +39,12 @@ const RecipeView = () => {
     [recipe?.required_equipment]
   )
 
-  const { saveRecipeToLocalStorage, isSaveSuccess: isSaveRecipeOfflineSuccess } =
-    useRecipesOffline({
-      recipeId: recipe?.id || -1
-    })
+  const {
+    saveRecipeToLocalStorage,
+    isSaveSuccess: isSaveRecipeOfflineSuccess
+  } = useRecipesOffline({
+    recipeId: recipe?.id || -1
+  })
 
   const isRecipeSavedLocally = useMemo(() => {
     try {
@@ -65,14 +68,23 @@ const RecipeView = () => {
             <header className={styles.mainHeader}>
               Tytuł: {recipe?.title}
             </header>
-            <button
+            <ButtonWithIcon
+              icon={Save}
+              iconSize={14}
+              variant='primary'
+              maxWidth={0.4}
+              maxHeight={32}
+              text={
+                isSaveRecipeOfflineSuccess || isRecipeSavedLocally
+                  ? 'Przepis zapisany w pamięci przeglądarki'
+                  : 'Zapisz przepis w pamięci przeglądarki'
+              }
               onClick={() => {
                 saveRecipeToLocalStorage()
               }}
               disabled={isSaveRecipeOfflineSuccess || isRecipeSavedLocally}
-            >
-              <p>Zapisz przepis offline</p> <Save size={14} />
-            </button>
+              disabledTooltip='Przepis zapisany w pamięci przeglądarki'
+            />
           </div>
           <section>
             <header className={styles.authorHeader}>

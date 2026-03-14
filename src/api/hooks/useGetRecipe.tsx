@@ -1,4 +1,4 @@
-import { apiUrl } from '@src/api/baseUrl'
+import { axiosClient } from '@src/api/axios'
 import { useQuery } from '@tanstack/react-query'
 
 type UseGetRecipeSettings = {
@@ -31,10 +31,11 @@ export type Recipe = {
 
 const useGetRecipe = (props: UseGetRecipeSettings) => {
   const getRecipe = (): Promise<Recipe> =>
-    fetch(`${apiUrl}/recipes/${props.recipeId}`)
+    axiosClient
+      .get(`/recipes/${props.recipeId}`)
       .then((response) => {
-        if (!response.ok) throw new Error('Network response was not ok')
-        return response.json()
+        if (!response.data) throw new Error('Network response was not ok')
+        return response.data
       })
       .catch(() => {
         const saved = localStorage.getItem(`recipe-${props.recipeId}`)

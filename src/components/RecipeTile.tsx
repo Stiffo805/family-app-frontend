@@ -1,5 +1,6 @@
 import type { RecipeInfo } from '@src/api/hooks/useGetRecipesList'
 import useRecipesOffline from '@src/api/hooks/useRecipesOffline'
+import ButtonWithIcon from '@src/components/ButtonWithIcon'
 import ConfirmationModal from '@src/components/ConfirmationModal'
 import styles from '@src/components/RecipeTile.module.css'
 import {
@@ -51,7 +52,13 @@ const RecipeTile = (props: RecipeTileProps) => {
           <header className={styles.titleHeader}>
             Tytuł: {props.recipe.title}
           </header>
-          <button
+          <ButtonWithIcon
+            icon={props.isRecipeSavedLocally(props.recipe) ? Trash2 : Save}
+            text={props.isRecipeSavedLocally(props.recipe) ? 'Usuń przepis z pamięci przeglądarki' : 'Zapisz przepis w pamięci przeglądarki'}
+            variant='secondary'
+            disabledTooltip='Odśwież stronę, aby odblokować'
+            alwaysShowTooltip
+            isCircleButton
             onClick={async (e) => {
               e.stopPropagation()
               if (!props.isRecipeSavedLocally(props.recipe))
@@ -61,13 +68,7 @@ const RecipeTile = (props: RecipeTileProps) => {
               }
             }}
             disabled={isSaveRecipeOfflineSuccess}
-          >
-            {props.isRecipeSavedLocally(props.recipe) ? (
-              <Trash2 size={28} />
-            ) : (
-              <Save size={28} />
-            )}
-          </button>
+          />
         </div>
         <header className={styles.authorHeader}>
           Autor: {props.recipe.author}
