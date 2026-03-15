@@ -1,4 +1,5 @@
 import ButtonWithIcon from '@src/components/ButtonWithIcon'
+import LogoutButton from '@src/components/LogoutButton'
 import styles from '@src/views/IndexView.module.css'
 import { ArrowRight } from 'lucide-react'
 import { useNavigate } from 'react-router'
@@ -8,6 +9,7 @@ const IndexView = () => {
 
   return (
     <div className={styles.indexViewContainer}>
+      <LogoutButton />
       <div className={styles.indexViewMainCard}>
         <nav>
           <ButtonWithIcon

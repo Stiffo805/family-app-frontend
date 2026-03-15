@@ -1,5 +1,6 @@
 import useGetShoppingList from '@src/api/hooks/useGetShoppingList'
 import GoBackArrow from '@src/components/GoBackArrow'
+import LogoutButton from '@src/components/LogoutButton'
 import ShoppingListItem from '@src/components/ShoppingListItem'
 import Spinner from '@src/components/Spinner'
 import styles from '@src/views/ShoppingListView.module.css'
@@ -13,6 +14,7 @@ const ShoppingListView = () => {
 
   return (
     <div className={styles.shoppingListsView}>
+      <LogoutButton />
       <GoBackArrow targetUrl='/shopping/lists' />
       {isLoading ? (
         <Spinner />

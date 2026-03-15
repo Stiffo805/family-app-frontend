@@ -9,13 +9,20 @@ type UsePatchShoppingListItemProps = {
 }
 
 const usePatchShoppingListItem = (props: UsePatchShoppingListItemProps) => {
-  const patchShoppingListItem = () =>
-    axiosClient.patch(
+  const patchShoppingListItem = () => {
+    const token = localStorage.getItem('authToken')
+    return axiosClient.patch(
       `/shopping/lists/${props.shoppingListId}/entries/${props.entryId}/`,
       {
         is_checked: props.isChecked
+      },
+      {
+        headers: {
+          Authorization: `Token ${token}`
+        }
       }
     )
+  }
 
   const shoppingListMutation = useMutation({
     mutationKey: [
