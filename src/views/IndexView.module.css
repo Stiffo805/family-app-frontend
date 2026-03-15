@@ -1,0 +1,31 @@
+.indexViewContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+
+  .indexViewMainCard {
+    padding: 20px;
+    background-color: var(--white1);
+  }
+
+  nav {
+    text-align: center;
+    padding: 10px;
+    background-color: var(--stone2);
+    border-radius: 10px;
+
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
+
+    button {
+      font-size: 28px;
+    }
+
+    p {
+      font-size: 12px;
+      color: var(--stone3);
+    }
+  }
+}

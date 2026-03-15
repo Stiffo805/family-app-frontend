@@ -1,0 +1,26 @@
+.shoppingListContainer {
+  padding: 20px;
+  background-color: var(--white1);
+  border-radius: 15px;
+  cursor: pointer;
+
+  .titleContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .titleHeader {
+    font-size: 1.2rem;
+    color: var(--brown1);
+  }
+
+  &:hover {
+      background-color: var(--white2);
+    }
+
+  & :not(:last-child) {
+    margin-bottom: 10px;
+  }
+}

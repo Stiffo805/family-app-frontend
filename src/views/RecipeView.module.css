@@ -36,7 +36,7 @@
     color: var(--brown1);
     font-family: var(--ff2);
     font-weight: var(--fw1);
-    font-size: 28px;
+    font-size: clamp(18px, 3vw, 28px);
   }
 
   header:not(.mainHeader) {

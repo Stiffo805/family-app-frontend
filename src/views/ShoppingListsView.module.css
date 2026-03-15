@@ -3,7 +3,7 @@
   padding: 0 40px;
   align-items: start;
 
-  .recipesTilesContainer {
+  .shoppingListsTilesContainer {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
 

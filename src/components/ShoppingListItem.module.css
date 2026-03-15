@@ -1,0 +1,35 @@
+.shoppingListItem {
+  display: block;
+  font-size: clamp(12px, 2vw, 24px);
+  padding: 10px 0;
+  padding-top: 15px;
+
+  &.checkedListItem {
+    opacity: 0.4;
+  }
+
+  .mainEntryContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .textContentContainer {
+    max-width: 90%;
+  }
+
+  .entryName {
+    color: var(--rose2);
+    font-weight: var(--fw2);
+  }
+
+  .additionalNotes {
+    font-size: clamp(8px, 1.25vw, 20px);
+    color: var(--stone3);
+  }
+
+  input[type=checkbox] {
+    width: clamp(16px, 2vw, 24px);
+    height: clamp(16px, 2vw, 24px);
+  }
+}
