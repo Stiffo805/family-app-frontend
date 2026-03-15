@@ -61,7 +61,7 @@ const ButtonWithIcon = (props: ButtonWithIconProps) => {
       ref={buttonRef}
       onClick={props.onClick}
       disabled={props.disabled}
-      className={`${props.isCircleButton ? styles.circleButton : ''} ${props.variant ? styles[props.variant] : ''}`}
+      className={`${styles.button} ${props.isCircleButton ? styles.circleButton : ''} ${props.variant ? styles[props.variant] : ''}`}
       style={{
         maxHeight: props.maxHeight
       }}

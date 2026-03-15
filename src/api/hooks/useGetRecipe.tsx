@@ -1,4 +1,5 @@
 import { axiosClient } from '@src/api/axios'
+import type { RecipeInfo } from '@src/api/hooks/useGetRecipesList'
 import { useQuery } from '@tanstack/react-query'
 
 type UseGetRecipeSettings = {
@@ -19,11 +20,7 @@ export type Ingredient = {
   unit_display: string
 }
 
-export type Recipe = {
-  id: number
-  title: string
-  author: string
-  preparation_time: string
+export type Recipe = RecipeInfo & {
   required_equipment: Equipment[]
   description: string
   ingredients: Ingredient[]

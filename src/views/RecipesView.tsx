@@ -2,6 +2,7 @@ import useGetRecipesList, {
   type RecipeInfo
 } from '@src/api/hooks/useGetRecipesList'
 import Breadcrumb from '@src/components/Breadcrumb'
+import GoBackArrow from '@src/components/GoBackArrow'
 import RecipeTile from '@src/components/RecipeTile'
 import Spinner from '@src/components/Spinner'
 import styles from '@src/views/RecipesView.module.css'
@@ -29,6 +30,7 @@ const RecipesView = () => {
 
   return (
     <div className={styles.mainContainer}>
+      <GoBackArrow targetUrl='/' left='10px' />
       {isLoading ? (
         <Spinner />
       ) : (

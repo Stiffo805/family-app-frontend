@@ -6,5 +6,6 @@ const axiosClient = axios.create({
 })
 
 axiosClient.defaults.timeout = 6000
+axiosClient.defaults.headers.common['Content-Type'] = 'application/json'
 
 export { axiosClient }
