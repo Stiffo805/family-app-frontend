@@ -21,56 +21,56 @@ const ShoppingListView = () => {
   const shoppingListContainerRef = useRef<HTMLElement>(null)
 
   const handleDownloadPdf = async () => {
-    const element = shoppingListContainerRef.current
-
-    if (!element) return
+    if (!data) return
 
     try {
-      // 1. Configure html2canvas to capture the full scrollable height
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        scrollY: -window.scrollY, // Prevents white spaces at the top if scrolled down
-        windowHeight: element.scrollHeight, // Capture the full height of the element
-        height: element.scrollHeight // Ensure the canvas is tall enough
-      })
-
-      const imgData = canvas.toDataURL('image/png')
       const pdf = new jsPDF('p', 'mm', 'a4')
-
-      // 2. Calculate dimensions for A4 page
       const pdfWidth = pdf.internal.pageSize.getWidth()
-      const pageHeight = pdf.internal.pageSize.getHeight()
-      const imgHeight = (canvas.height * pdfWidth) / canvas.width
+      const pdfHeight = pdf.internal.pageSize.getHeight()
 
-      let heightLeft = imgHeight
-      let position = 0
+      const marginY = 10
+      const marginX = 15
+      let currentY = marginY
 
-      // 3. Add the first page
-      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight)
-      heightLeft -= pageHeight
+      const usableWidth = pdfWidth - marginX * 2
 
-      // 4. If the image is taller than one A4 page, add new pages dynamically
-      while (heightLeft > 0) {
-        // Shift the image upwards by the height of one page
-        position = position - pageHeight
-        pdf.addPage()
-        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight)
-        heightLeft -= pageHeight
+      const addElementToPdf = async (element: HTMLElement) => {
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff'
+        })
+
+        const imgData = canvas.toDataURL('image/png')
+
+        const imgHeight = (canvas.height * usableWidth) / canvas.width
+
+        if (currentY + imgHeight > pdfHeight - marginY) {
+          pdf.addPage()
+          currentY = marginY
+        }
+
+        pdf.addImage(imgData, 'PNG', marginX, currentY, usableWidth, imgHeight)
+
+        currentY += imgHeight + 2
       }
 
-      pdf.save(`Zakupy - ${data?.title}.pdf`)
+      const items = document.querySelectorAll('.pdf-element')
+
+      for (const item of Array.from(items)) {
+        await addElementToPdf(item as HTMLElement)
+      }
+
+      pdf.save(`Zakupy - ${data.title}.pdf`)
     } catch (error) {
       console.error('Failed to generate PDF document: ', error)
     }
   }
 
   const handleDownloadDocx = async () => {
-    // Safety check: ensure data is loaded before trying to export
     if (!data) return
 
     try {
-      // 1. Map shopping list entries to DOCX paragraphs
       const entryParagraphs = data.entries
         .sort(
           (entry1, entry2) =>
@@ -98,7 +98,6 @@ const ShoppingListView = () => {
           })
         })
 
-      // 2. Construct the Word document structure
       const doc = new Document({
         sections: [
           {
@@ -116,20 +115,18 @@ const ShoppingListView = () => {
                 text: data.description || 'Brak opisu'
               }),
               new Paragraph({
-                text: '' // Empty line for spacing
+                text: ''
               }),
               new Paragraph({
                 text: 'Przedmioty zakupowe:',
                 heading: HeadingLevel.HEADING_2
               }),
-              // Inject the dynamically mapped items
               ...entryParagraphs
             ]
           }
         ]
       })
 
-      // 3. Generate a binary blob and trigger the native browser download
       const blob = await Packer.toBlob(doc)
       const url = window.URL.createObjectURL(blob)
 
@@ -139,7 +136,6 @@ const ShoppingListView = () => {
       document.body.appendChild(link)
       link.click()
 
-      // 4. Cleanup to prevent memory leaks
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
     } catch (error) {
@@ -158,10 +154,13 @@ const ShoppingListView = () => {
           className={styles.shoppingListContainer}
           ref={shoppingListContainerRef}
         >
-          <div className={styles.mainHeaderContainer}>
+          <div className={`${styles.mainHeaderContainer} pdf-element`}>
             <header className={styles.mainHeader}>Tytuł: {data?.title}</header>
           </div>
-          <div className={styles.buttonsContainer}>
+          <div
+            className={styles.buttonsContainer}
+            data-html2canvas-ignore='true'
+          >
             <ButtonWithIcon
               icon={Download}
               iconSize={16}
@@ -177,26 +176,26 @@ const ShoppingListView = () => {
               onClick={handleDownloadDocx}
             />
           </div>
-          <section>
+          <section className='pdf-element'>
             <header>Opis: </header>
             {data?.description}
           </section>
           <hr />
           <section>
-            <header>Przedmioty zakupowe</header>
+            <header className='pdf-element'>Przedmioty zakupowe</header>
             {data?.entries
               .sort(
                 (entry1, entry2) =>
                   Number(entry1.is_checked) - Number(entry2.is_checked)
               )
               .map((entry) => (
-                <>
+                <div key={entry.id} className='pdf-element'>
                   <ShoppingListItem
                     shoppingListEntry={entry}
                     shoppingListId={data.id}
                   />
                   <hr />
-                </>
+                </div>
               ))}
           </section>
         </article>
