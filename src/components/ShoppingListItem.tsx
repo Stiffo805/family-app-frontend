@@ -25,7 +25,7 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
           </span>{' '}
           -{' '}
           <span className={styles.entryAmount}>
-            {props.shoppingListEntry.quantity}{' '}
+            {Number(props.shoppingListEntry.quantity)}{' '}
             {props.shoppingListEntry.unit_display}
           </span>
           <br />
