@@ -1,0 +1,15 @@
+.inactiveServerInfoContainer {
+  background-color: var(--white1);
+  text-align: center;
+  padding: 20px;
+
+  & > header {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  & > p {
+    font-size: 18px;
+    color: var(--stone3);
+  }
+}
