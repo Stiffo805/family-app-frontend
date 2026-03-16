@@ -20,7 +20,7 @@ const ShoppingListTile = (props: ShoppingListTileProps) => {
             Tytuł: {props.shoppingList.title}
           </header>
         </div>
-        <p className={styles.description}>Opis: {props.shoppingList.description}</p>
+        <p className={styles.description}>Opis: {props.shoppingList.description ?? 'Brak opisu'}</p>
       </div>
     </>
   )

@@ -186,9 +186,9 @@ const ShoppingListView = () => {
           </div>
           <section className='pdf-element'>
             <header>Opis: </header>
-            {data?.description}
+            {data?.description ?? 'Brak opisu'}
           </section>
-          <hr />
+          <hr className='pdf-element' />
           <section>
             <header className='pdf-element'>Przedmioty zakupowe</header>
             {data?.entries
