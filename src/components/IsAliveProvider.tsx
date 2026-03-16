@@ -1,24 +1,27 @@
 import useGetIsAlive from '@src/api/hooks/useGetIsAlive'
 import CenteredTileWrapper from '@src/components/CenteredTileWrapper'
-import { useEffect, type PropsWithChildren } from 'react'
+import { type PropsWithChildren } from 'react'
 import styles from '@src/components/IsAliveProvider.module.css'
-import { queryClient } from '@src/api/queryClient'
 
 const IsAliveProvider = (props: PropsWithChildren) => {
-  const { status } = useGetIsAlive()
+  const { isError, isLoading } = useGetIsAlive()
 
-  useEffect(() => {
-    queryClient.invalidateQueries({
-      queryKey: ['alive']
-    })
-  }, [])
+  if (isLoading)
+    return (
+      <CenteredTileWrapper containerMinHeight='100vh'>
+        <div className={styles.inactiveServerInfoContainer}>
+          <header>Testowanie połączenia z serwerem</header>
+          <p>Proszę czekać</p>
+        </div>
+      </CenteredTileWrapper>
+    )
 
-  if (status !== 'success')
+  if (isError)
     return (
       <CenteredTileWrapper containerMinHeight='100vh'>
         <div className={styles.inactiveServerInfoContainer}>
           <header>Serwer nieaktywny</header>
-          <p>Prosimy poczekać około 1 minuty i odświeżyć stronę</p>
+          <p>Proszę poczekać około 1 minuty i odświeżyć stronę</p>
         </div>
       </CenteredTileWrapper>
     )

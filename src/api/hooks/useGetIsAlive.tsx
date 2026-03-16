@@ -6,10 +6,13 @@ const useGetIsAlive = () => {
 
   const isAliveQuery = useQuery({
     queryKey: ['alive'],
-    queryFn: getIsAlive
+    queryFn: getIsAlive,
+    refetchInterval: 10000,
+    retry: false,
+    refetchOnWindowFocus: true
   })
 
-  return { status: isAliveQuery.status, refetch: isAliveQuery.refetch }
+  return { isError: isAliveQuery.isError, isLoading: isAliveQuery.isLoading }
 }
 
 export default useGetIsAlive
