@@ -8,12 +8,16 @@ import styles from '@src/views/ShoppingListView.module.css'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import { Download } from 'lucide-react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
 
 const ShoppingListView = () => {
   const params = useParams()
+
+  const [isPdfDownloading, setIsPdfDownloading] = useState(false)
+  const [isDocxDownloading, setIsDocxDownloading] = useState(false)
+
   const { data, isLoading } = useGetShoppingList({
     shoppingListId: Number(params.shoppingListId)
   })
@@ -22,7 +26,7 @@ const ShoppingListView = () => {
 
   const handleDownloadPdf = async () => {
     if (!data) return
-
+    setIsPdfDownloading(true)
     try {
       const pdf = new jsPDF('p', 'mm', 'a4')
       const pdfWidth = pdf.internal.pageSize.getWidth()
@@ -65,11 +69,12 @@ const ShoppingListView = () => {
     } catch (error) {
       console.error('Failed to generate PDF document: ', error)
     }
+    setIsPdfDownloading(false)
   }
 
   const handleDownloadDocx = async () => {
     if (!data) return
-
+    setIsDocxDownloading(true)
     try {
       const entryParagraphs = data.entries
         .sort(
@@ -141,6 +146,7 @@ const ShoppingListView = () => {
     } catch (error) {
       console.error('Failed to generate DOCX document: ', error)
     }
+    setIsDocxDownloading(false)
   }
 
   return (
@@ -164,16 +170,18 @@ const ShoppingListView = () => {
             <ButtonWithIcon
               icon={Download}
               iconSize={16}
-              text='Pobierz pdf'
+              text={`${isPdfDownloading ? 'Pobieram...' : 'Pobierz pdf'}`}
               variant='primary'
               onClick={handleDownloadPdf}
+              disabled={isPdfDownloading}
             />
             <ButtonWithIcon
               icon={Download}
               iconSize={16}
-              text='Pobierz docx'
+              text={`${isDocxDownloading ? 'Pobieram...' : 'Pobierz docx'}`}
               variant='primary'
               onClick={handleDownloadDocx}
+              disabled={isDocxDownloading}
             />
           </div>
           <section className='pdf-element'>
