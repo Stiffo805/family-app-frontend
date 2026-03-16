@@ -9,6 +9,7 @@ import ShoppingListsView from '@src/views/ShoppingListsView'
 import ShoppingListView from '@src/views/ShoppingListView'
 import LoginView from '@src/views/LoginView'
 import ProtectedRoutes from '@src/components/ProtectedRoutes'
+import IsAliveProvider from '@src/components/IsAliveProvider'
 
 const router = createBrowserRouter(
   [
@@ -37,10 +38,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className={styles.appContainer}>
-        <RouterProvider router={router} />
-        <footer className={styles.footer}>
-          Design provided by Frontend Mentor
-        </footer>
+        <IsAliveProvider>
+          <RouterProvider router={router} />
+          <footer className={styles.footer}>
+            Design provided by Frontend Mentor
+          </footer>
+        </IsAliveProvider>
       </div>
     </QueryClientProvider>
   )
