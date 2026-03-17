@@ -39,6 +39,7 @@ jobs:
           cp dist/index.html dist/404.html
         env:
           VITE_BACKEND_URL: "https://family-app-backend-bisc.onrender.com"
+          VITE_VAPID_PUBLIC_KEY: "BK-SECF04EUby8jbhieLig2w0rFYShz6zlgSXe-FliPFSSw5keKFMGy87Vxc1k84sE-1iWPCzWF3mApxHSlogNc"
       - name: List files in dist
         run: ls -R ./dist
       - name: Setup Pages

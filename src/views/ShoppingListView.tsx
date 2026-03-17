@@ -7,16 +7,25 @@ import Spinner from '@src/components/Spinner'
 import styles from '@src/views/ShoppingListView.module.css'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
-import { Download } from 'lucide-react'
+import { BellMinus, BellPlus, Download } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
+import {
+  subscribeToListNotifications,
+  unsubscribeFromListNotifications
+} from '@src/api/pushSubscription'
+import { usePushStatus } from '@src/api/hooks/usePushStatus'
 
 const ShoppingListView = () => {
   const params = useParams()
 
   const [isPdfDownloading, setIsPdfDownloading] = useState(false)
   const [isDocxDownloading, setIsDocxDownloading] = useState(false)
+
+  const { isSubscribed, setIsSubscribed } = usePushStatus(
+    Number(params.shoppingListId)
+  )
 
   const { data, isLoading } = useGetShoppingList({
     shoppingListId: Number(params.shoppingListId)
@@ -156,57 +165,87 @@ const ShoppingListView = () => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <article
-          className={styles.shoppingListContainer}
-          ref={shoppingListContainerRef}
-        >
-          <div className={`${styles.mainHeaderContainer} pdf-element`}>
-            <header className={styles.mainHeader}>Tytuł: {data?.title}</header>
-          </div>
-          <div
-            className={styles.buttonsContainer}
-            data-html2canvas-ignore='true'
-          >
-            <ButtonWithIcon
-              icon={Download}
-              iconSize={16}
-              text={`${isPdfDownloading ? 'Pobieram...' : 'Pobierz pdf'}`}
-              variant='primary'
-              onClick={handleDownloadPdf}
-              disabled={isPdfDownloading}
-            />
-            <ButtonWithIcon
-              icon={Download}
-              iconSize={16}
-              text={`${isDocxDownloading ? 'Pobieram...' : 'Pobierz docx'}`}
-              variant='primary'
-              onClick={handleDownloadDocx}
-              disabled={isDocxDownloading}
-            />
-          </div>
-          <section className='pdf-element'>
-            <header>Opis: </header>
-            {data?.description ?? 'Brak opisu'}
-          </section>
-          <hr className='pdf-element' />
-          <section>
-            <header className='pdf-element'>Przedmioty zakupowe</header>
-            {data?.entries
-              .sort(
-                (entry1, entry2) =>
-                  Number(entry1.is_checked) - Number(entry2.is_checked)
+        <main>
+          <ButtonWithIcon
+            icon={isSubscribed ? BellMinus : BellPlus}
+            text={
+              isSubscribed ? (
+                <>
+                  <b>Wyłącz</b> powiadomienia dla tej listy
+                </>
+              ) : (
+                <>
+                  <b>Włącz</b> powiadomienia dla tej listy
+                </>
               )
-              .map((entry) => (
-                <div key={entry.id} className='pdf-element'>
-                  <ShoppingListItem
-                    shoppingListEntry={entry}
-                    shoppingListId={data.id}
-                  />
-                  <hr />
-                </div>
-              ))}
-          </section>
-        </article>
+            }
+            variant='primary'
+            onClick={() => {
+              if (data?.id)
+                if (isSubscribed)
+                  unsubscribeFromListNotifications(data.id).then(() =>
+                    setIsSubscribed(false)
+                  )
+                else
+                  subscribeToListNotifications(data.id).then(() => {
+                    setIsSubscribed(true)
+                  })
+            }}
+          />
+          <article
+            className={styles.shoppingListContainer}
+            ref={shoppingListContainerRef}
+          >
+            <div className={`${styles.mainHeaderContainer} pdf-element`}>
+              <header className={styles.mainHeader}>
+                Tytuł: {data?.title}
+              </header>
+            </div>
+            <div
+              className={styles.buttonsContainer}
+              data-html2canvas-ignore='true'
+            >
+              <ButtonWithIcon
+                icon={Download}
+                iconSize={16}
+                text={`${isPdfDownloading ? 'Pobieram...' : 'Pobierz pdf'}`}
+                variant='primary'
+                onClick={handleDownloadPdf}
+                disabled={isPdfDownloading}
+              />
+              <ButtonWithIcon
+                icon={Download}
+                iconSize={16}
+                text={`${isDocxDownloading ? 'Pobieram...' : 'Pobierz docx'}`}
+                variant='primary'
+                onClick={handleDownloadDocx}
+                disabled={isDocxDownloading}
+              />
+            </div>
+            <section className='pdf-element'>
+              <header>Opis: </header>
+              {data?.description ?? 'Brak opisu'}
+            </section>
+            <hr className='pdf-element' />
+            <section>
+              <header className='pdf-element'>Przedmioty zakupowe</header>
+              {data?.entries
+                .sort(
+                  (entry1, entry2) =>
+                    Number(entry1.is_checked) - Number(entry2.is_checked)
+                )
+                .map((entry) => (
+                  <div key={entry.id} className='pdf-element'>
+                    <ShoppingListItem
+                      shoppingListEntry={entry}
+                      shoppingListId={data.id}
+                    />
+                    <hr />
+                  </div>
+                ))}
+            </section>
+          </article>
+        </main>
       )}
     </div>
   )

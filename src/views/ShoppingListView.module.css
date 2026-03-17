@@ -11,6 +11,7 @@
 
   width: clamp(360px, 60vw, 1200px);
   padding: 40px;
+  margin-top: 20px;
   border-radius: var(--rounded1);
 
   & > *:not(:last-child) {

@@ -1,10 +1,10 @@
 import type { LucideIcon } from 'lucide-react'
 import styles from '@src/components/ButtonWithIcon.module.css'
-import { useEffect, useRef, useState, type MouseEventHandler } from 'react'
+import { useEffect, useRef, useState, type JSX, type MouseEventHandler } from 'react'
 
 type ButtonWithIconProps = {
   icon: LucideIcon
-  text: string
+  text: string | JSX.Element
   onClick: MouseEventHandler<HTMLButtonElement>
   variant: 'primary' | 'secondary'
   maxWidth?: number
