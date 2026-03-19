@@ -28,6 +28,12 @@
     color: var(--stone3);
   }
 
+  .modificationTypeLabel {
+    font-size: clamp(7px, 1.1vw, 18px);
+    color: var(--stone5);
+    font-style: italic;
+  }
+
   input[type=checkbox] {
     width: clamp(16px, 2vw, 24px);
     height: clamp(16px, 2vw, 24px);
