@@ -17,6 +17,22 @@ export interface PushPayload {
   timestamp?: string
 }
 
+// --- Service Worker Lifecycle Management ---
+
+self.addEventListener('install', () => {
+    // Forces the waiting Service Worker to become the active Service Worker.
+    // This bypasses the default "waiting" state completely.
+    self.skipWaiting();
+    console.log('New Service Worker installed and skipWaiting executed.');
+});
+
+self.addEventListener('activate', (event: ExtendableEvent) => {
+    // Tells the active Service Worker to take immediate control of all open 
+    // browser tabs (clients), rather than waiting for the next page reload.
+    event.waitUntil(self.clients.claim());
+    console.log('New Service Worker activated and claimed clients.');
+});
+
 // --- Push Event Handler ---
 
 self.addEventListener('push', (event: PushEvent) => {
