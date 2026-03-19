@@ -15,20 +15,20 @@ export const subscribeToListNotifications = async (
 
   try {
     // 1. Grab the BASE_URL and guarantee it ends with a slash
-    const rawBaseUrl = import.meta.env.BASE_URL;
-    const safeScope = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
+    const rawBaseUrl = import.meta.env.BASE_URL
+    const safeScope = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`
 
     // 2. Safely construct the Service Worker URL
-    const swFilename = import.meta.env.DEV ? 'src/sw.ts' : 'sw.js';
-    const swUrl = `${safeScope}${swFilename}`;
+    const swFilename = import.meta.env.DEV ? 'src/sw.ts' : 'sw.js'
+    const swUrl = `${safeScope}${swFilename}`
 
     // 3. Register with the corrected scope
     const registration = await navigator.serviceWorker.register(swUrl, {
       type: 'module',
       scope: safeScope // This strictly matches GitHub Pages folder structure
-    });
-    
-    await navigator.serviceWorker.ready;
+    })
+
+    await navigator.serviceWorker.ready
 
     // 3. Subscribe the user to Push Notifications
     // This will trigger the browser's permission prompt if not already granted
