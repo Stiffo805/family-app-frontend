@@ -3,7 +3,7 @@ import usePatchShoppingListItem from '@src/api/hooks/usePatchShoppingListItem'
 import {
   acknowledgeChange,
   initChangesDB,
-  type ModificationType,
+  type ModificationType
 } from '@src/api/indexedDb'
 import styles from '@src/components/ShoppingListItem.module.css'
 
@@ -29,6 +29,18 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
     else if (props.modificationType === 'deleted')
       return 'hsla(11 100% 77% / 0.46)'
     else return undefined
+  }
+
+  const getModificationTypeLabel = () => {
+    if (props.modificationType === 'created') {
+      return 'Dodane'
+    }
+    if (props.modificationType === 'updated') {
+      return 'Zaktulizowane'
+    }
+    if (props.modificationType === 'deleted') {
+      return 'Usunięte'
+    }
   }
 
   const acknowledge = async () => {
@@ -63,6 +75,8 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
           <span className={styles.additionalNotes}>
             {props.shoppingListEntry.extra_notes ?? 'Brak uwag'}
           </span>
+          <br />
+          {props.modificationType && <span className={styles.modificationTypeLabel}>{getModificationTypeLabel()}</span>}
         </div>
         <input
           type='checkbox'
