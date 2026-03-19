@@ -8,7 +8,7 @@ import styles from '@src/views/ShoppingListView.module.css'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import { BellMinus, BellPlus, Download } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
 import {
@@ -16,12 +16,27 @@ import {
   unsubscribeFromListNotifications
 } from '@src/api/pushSubscription'
 import { usePushStatus } from '@src/api/hooks/usePushStatus'
+import {
+  initChangesDB,
+  retrieveCreatedAndUpdatedItems,
+  retrieveDeletedItems,
+  type DeletedItemRecord,
+  type ModifiedItemRecord
+} from '@src/api/indexedDb'
 
 const ShoppingListView = () => {
   const params = useParams()
 
   const [isPdfDownloading, setIsPdfDownloading] = useState(false)
   const [isDocxDownloading, setIsDocxDownloading] = useState(false)
+
+  const [
+    undiscoveredCreatedAndUpdatedItems,
+    setUndiscoveredCreatedAndUpdatedItems
+  ] = useState<ModifiedItemRecord[]>([])
+  const [undiscoveredDeletedItems, setUndiscoveredDeletedItems] = useState<
+    DeletedItemRecord[]
+  >([])
 
   const { isSubscribed, setIsSubscribed } = usePushStatus(
     Number(params.shoppingListId)
@@ -158,6 +173,25 @@ const ShoppingListView = () => {
     setIsDocxDownloading(false)
   }
 
+  const loadChangesFromIDB = async () => {
+    const db = await initChangesDB()
+    const createdAndUpdatedItems = await retrieveCreatedAndUpdatedItems(db)
+    setUndiscoveredCreatedAndUpdatedItems(createdAndUpdatedItems)
+    const deletedItems = await retrieveDeletedItems(db)
+    setUndiscoveredDeletedItems(deletedItems)
+  }
+
+  const getModificationType = (listItemId: number) => {
+    return undiscoveredCreatedAndUpdatedItems.find(
+      (item) => item.id === listItemId
+    )?.modificationType
+  }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadChangesFromIDB()
+  }, [])
+
   return (
     <div className={styles.shoppingListsView}>
       <LogoutButton />
@@ -239,10 +273,22 @@ const ShoppingListView = () => {
                     <ShoppingListItem
                       shoppingListEntry={entry}
                       shoppingListId={data.id}
+                      modificationType={getModificationType(entry.id || -1)}
+                      loadChangesFromIdb={loadChangesFromIDB}
                     />
                     <hr />
                   </div>
                 ))}
+              {undiscoveredDeletedItems.map((item, index) => (
+                <div key={index} className='pdf-element'>
+                  <ShoppingListItem
+                    shoppingListEntry={item}
+                    modificationType='deleted'
+                    loadChangesFromIdb={loadChangesFromIDB}
+                  />
+                  <hr />
+                </div>
+              ))}
             </section>
           </article>
         </main>

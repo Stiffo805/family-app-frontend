@@ -7,11 +7,11 @@ type UseGetShoppingListProps = {
 }
 
 export type ShoppingListEntry = {
-  id: number
-  product_id: number
+  id?: number
+  product_id?: number
   product_name: string
   quantity: number
-  unit: string
+  unit?: string
   unit_display: string
   extra_notes: string | null
   is_checked: boolean

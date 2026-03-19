@@ -16,10 +16,15 @@ export const subscribeToListNotifications = async (
   try {
     // 2. Register the Service Worker
     // Construct the correct URL dynamically based on Vite's environment
-    const swUrl = `${import.meta.env.BASE_URL}/sw.js`
+    const swFilename = import.meta.env.DEV ? 'src/sw.ts' : 'sw.js'
+    const swUrl = `${import.meta.env.BASE_URL}/${swFilename}`
 
-    // Register the Service Worker using the dynamic URL
-    const registration = await navigator.serviceWorker.register(swUrl)
+    // Register the Service Worker with the exact BASE_URL scope
+    const registration = await navigator.serviceWorker.register(swUrl, {
+      type: 'module',
+      scope: import.meta.env.BASE_URL 
+    })
+    
     await navigator.serviceWorker.ready
 
     // 3. Subscribe the user to Push Notifications
