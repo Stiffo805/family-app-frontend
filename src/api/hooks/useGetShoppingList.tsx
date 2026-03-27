@@ -10,9 +10,9 @@ export type ShoppingListEntry = {
   id?: number
   product_id?: number
   product_name: string
-  quantity: number
-  unit?: string
-  unit_display: string
+  quantity: number | null
+  unit?: string | null
+  unit_display: string | null
   extra_notes: string | null
   is_checked: boolean
 }

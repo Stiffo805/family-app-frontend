@@ -66,17 +66,25 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
           <span className={styles.entryName}>
             {props.shoppingListEntry.product_name}
           </span>{' '}
-          -{' '}
-          <span className={styles.entryAmount}>
-            {Number(props.shoppingListEntry.quantity)}{' '}
-            {props.shoppingListEntry.unit_display}
-          </span>
+          {props.shoppingListEntry.quantity && (
+            <>
+              -{' '}
+              <span className={styles.entryAmount}>
+                {Number(props.shoppingListEntry.quantity)}{' '}
+                {props.shoppingListEntry.unit_display}
+              </span>
+            </>
+          )}
           <br />
           <span className={styles.additionalNotes}>
             {props.shoppingListEntry.extra_notes ?? 'Brak uwag'}
           </span>
           <br />
-          {props.modificationType && <span className={styles.modificationTypeLabel}>{getModificationTypeLabel()}</span>}
+          {props.modificationType && (
+            <span className={styles.modificationTypeLabel}>
+              {getModificationTypeLabel()}
+            </span>
+          )}
         </div>
         <input
           type='checkbox'
