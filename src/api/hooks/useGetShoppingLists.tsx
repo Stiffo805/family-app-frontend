@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 export type ShoppingListInfo = {
   id: number
   title: string
-  description: string
+  description: string | null
 }
 
 type ShoppingListsInfosList = {
