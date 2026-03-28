@@ -3,8 +3,11 @@ import { LogOut } from 'lucide-react'
 import styles from '@src/components/LogoutButton.module.css'
 import ConfirmationModal from '@src/components/ConfirmationModal'
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 
 const LogoutButton = () => {
+  const navigate = useNavigate()
+
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
     useState(false)
 
@@ -12,6 +15,7 @@ const LogoutButton = () => {
 
   const logout = () => {
     localStorage.removeItem('authToken')
+    navigate('/login')
   }
 
   if (!token) return null

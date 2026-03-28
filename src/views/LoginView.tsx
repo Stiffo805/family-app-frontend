@@ -1,5 +1,7 @@
 import useLogin from '@src/api/hooks/useLogin'
+import DarkenedBackground from '@src/components/DarkenedBackground'
 import GoBackArrow from '@src/components/GoBackArrow'
+import Spinner from '@src/components/Spinner'
 import styles from '@src/views/LoginView.module.css'
 import { useEffect, type SyntheticEvent } from 'react'
 import { useNavigate } from 'react-router'
@@ -7,7 +9,7 @@ import { useNavigate } from 'react-router'
 const LoginView = () => {
   const navigate = useNavigate()
 
-  const { mutate, isError, isSuccess } = useLogin()
+  const { mutate, isError, isSuccess, isPending } = useLogin()
 
   const handleLoginSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -30,6 +32,12 @@ const LoginView = () => {
 
   return (
     <div className={styles.mainContainer}>
+      {isPending && (
+        <>
+          <Spinner />
+          <DarkenedBackground />
+        </>
+      )}
       <GoBackArrow targetUrl='/' />
       <div className={styles.loginFormContainer}>
         <form onSubmit={handleLoginSubmit}>

@@ -1,0 +1,10 @@
+.darkenedBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--stone4);
+  opacity: 50%;
+  z-index: 10;
+}
