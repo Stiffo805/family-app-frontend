@@ -167,8 +167,8 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
                 text='Edytuj'
                 variant='secondary'
                 onClick={() => setIsEditionModalVisible(true)}
-                iconSize='1.4cqw'
-                fontSize='1.4cqw'
+                iconSize='max(1.4cqw, 12px)'
+                fontSize='max(1.4cqw, 12px)'
                 padding={4}
               />
             )}
