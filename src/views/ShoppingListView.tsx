@@ -112,17 +112,18 @@ const ShoppingListView = () => {
               new TextRun({
                 text: entry.is_checked ? '[X] ' : '[ ] ',
                 bold: true,
-                font: '24px',
+                size: 32,
                 break: 1
               }),
               new TextRun({
-                text: `${entry.product_name || 'Nieznany produkt'} - ${Number(entry.quantity)} ${entry.unit_display}`,
-                font: '24px'
+                text: `${entry.product_name || 'Nieznany produkt'}${Number(entry.quantity) ? ` - ${Number(entry.quantity)} ${entry.unit_display}` : ''}`,
+                size: 32
               }),
               new TextRun({
                 text: entry.extra_notes || 'Brak uwag',
                 color: '#808080',
-                break: 1
+                break: 1,
+                size: 24
               })
             ]
           })
