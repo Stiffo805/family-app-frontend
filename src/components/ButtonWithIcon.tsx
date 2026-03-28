@@ -1,6 +1,12 @@
 import type { LucideIcon } from 'lucide-react'
 import styles from '@src/components/ButtonWithIcon.module.css'
-import { useEffect, useRef, useState, type JSX, type MouseEventHandler } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type JSX,
+  type MouseEventHandler
+} from 'react'
 
 type ButtonWithIconProps = {
   icon: LucideIcon
@@ -9,8 +15,10 @@ type ButtonWithIconProps = {
   variant: 'primary' | 'secondary'
   maxWidth?: number
   maxHeight?: number
+  padding?: number
+  fontSize?: string
   gap?: string
-  iconSize?: number
+  iconSize?: number | string
   alwaysShowTooltip?: boolean
   isCircleButton?: boolean
   disabled?: boolean
@@ -18,6 +26,8 @@ type ButtonWithIconProps = {
 }
 
 const DEFAULT_GAP = '5px'
+const DEFAULT_PADDING = '10px'
+const DEFAULT_FONT_SIZE = 'inherit'
 
 const ButtonWithIcon = (props: ButtonWithIconProps) => {
   const [showTooltip, setShowTooltip] = useState(false)
@@ -63,7 +73,9 @@ const ButtonWithIcon = (props: ButtonWithIconProps) => {
       disabled={props.disabled}
       className={`${styles.button} ${props.isCircleButton ? styles.circleButton : ''} ${props.variant ? styles[props.variant] : ''}`}
       style={{
-        maxHeight: props.maxHeight
+        maxHeight: props.maxHeight,
+        padding: props.padding ?? DEFAULT_PADDING,
+        fontSize: props.fontSize ?? DEFAULT_FONT_SIZE
       }}
     >
       <div style={{ gap: props.gap ?? DEFAULT_GAP }}>
@@ -91,7 +103,9 @@ const ButtonWithIcon = (props: ButtonWithIconProps) => {
             height: 0,
             overflow: 'hidden',
             display: 'flex',
-            gap: props.gap ?? DEFAULT_GAP
+            gap: props.gap ?? DEFAULT_GAP,
+            padding: props.padding ?? DEFAULT_PADDING,
+            fontSize: props.fontSize ?? DEFAULT_FONT_SIZE
           }}
           aria-hidden='true'
         >

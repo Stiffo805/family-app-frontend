@@ -7,7 +7,7 @@ import Spinner from '@src/components/Spinner'
 import styles from '@src/views/ShoppingListView.module.css'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
-import { BellMinus, BellPlus, Download } from 'lucide-react'
+import { BellMinus, BellPlus, Download, Pencil, PencilOff } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
@@ -29,6 +29,7 @@ const ShoppingListView = () => {
 
   const [isPdfDownloading, setIsPdfDownloading] = useState(false)
   const [isDocxDownloading, setIsDocxDownloading] = useState(false)
+  const [isEditionMode, setIsEditionMode] = useState(false)
 
   const [
     undiscoveredCreatedAndUpdatedItems,
@@ -226,6 +227,24 @@ const ShoppingListView = () => {
                   })
             }}
           />
+          <br />
+          <br />
+          <ButtonWithIcon
+            icon={isEditionMode ? PencilOff : Pencil}
+            text={
+              isEditionMode ? (
+                <>
+                  <b>Wyłącz</b> tryb rozszerzonej edycji
+                </>
+              ) : (
+                <>
+                  <b>Włącz</b> tryb rozszerzonej edycji
+                </>
+              )
+            }
+            variant='primary'
+            onClick={() => setIsEditionMode((cur) => !cur)}
+          />
           <article
             className={styles.shoppingListContainer}
             ref={shoppingListContainerRef}
@@ -275,6 +294,7 @@ const ShoppingListView = () => {
                       shoppingListId={data.id}
                       modificationType={getModificationType(entry.id || -1)}
                       loadChangesFromIdb={loadChangesFromIDB}
+                      isEditionMode={isEditionMode}
                     />
                     <hr />
                   </div>
