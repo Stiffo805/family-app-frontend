@@ -15,4 +15,5 @@
   animation-iteration-count: infinite;
   animation-duration: 0.75s;
   animation-direction: normal;
+  z-index: 20;
 }
