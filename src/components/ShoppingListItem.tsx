@@ -84,8 +84,8 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
 
           const formData = new FormData(e.currentTarget)
 
-          const quantity = Number(formData.get('quantity'))
-          const unit = formData.get('unit')?.toString()
+          const quantity = Number(formData.get('quantity')) ? Number(formData.get('quantity')) : null
+          const unit = formData.get('unit') ? formData.get('unit')?.toString() : null
           const extraNotes = formData.get('extraNotes')?.toString()
 
           updateItem({ quantity, unit, extraNotes })
