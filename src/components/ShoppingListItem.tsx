@@ -13,6 +13,8 @@ import ConfirmationModal from '@src/components/ConfirmationModal'
 import ErrorSpan from '@src/components/ErrorSpan'
 import Modal from '@src/components/Modal'
 import styles from '@src/components/ShoppingListItem.module.css'
+import { convertDateToReadable } from '@src/util/helpers'
+import type { ShoppingListItemsSortingType } from '@src/views/ShoppingListView'
 import { Pencil } from 'lucide-react'
 import { useState } from 'react'
 
@@ -22,6 +24,7 @@ type ShoppingListItemProps = {
   modificationType?: ModificationType
   loadChangesFromIdb: () => void
   isEditionMode?: boolean
+  sorting?: ShoppingListItemsSortingType
 }
 
 const ShoppingListItem = (props: ShoppingListItemProps) => {
@@ -77,7 +80,7 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
       return 'Dodane'
     }
     if (props.modificationType === 'updated') {
-      return 'Zaktulizowane'
+      return 'Zaktualizowane'
     }
     if (props.modificationType === 'deleted') {
       return 'Usunięte'
@@ -189,11 +192,24 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
                 ? props.shoppingListEntry.extra_notes
                 : 'Brak uwag'}
             </span>
-            <br />
             {props.modificationType && (
-              <span className={styles.modificationTypeLabel}>
-                {getModificationTypeLabel()}
-              </span>
+              <>
+                <br />
+                <span className={styles.modificationTypeLabel}>
+                  {getModificationTypeLabel()}
+                </span>
+              </>
+            )}
+            {props.sorting === 'timestamp' && (
+              <>
+                <br />
+                <span className={styles.lastUpdateDateLabel}>
+                  Ostatnia aktualizacja:{' '}
+                  {props.shoppingListEntry.updated_at
+                    ? convertDateToReadable(props.shoppingListEntry.updated_at)
+                    : 'Brak informacji'}
+                </span>
+              </>
             )}
           </div>
           <div className={styles.shoppingItemPostfix}>
