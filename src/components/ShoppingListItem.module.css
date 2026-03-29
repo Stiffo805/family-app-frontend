@@ -44,6 +44,12 @@
     align-items: center;
     gap: 20px;
   }
+
+  .lastUpdateDateLabel {
+    font-size: clamp(7px, 1.1vw, 18px);
+    font-style: italic;
+    font-weight: 200;
+  }
 }
 
 .editionModalBody {

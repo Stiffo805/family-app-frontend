@@ -17,7 +17,7 @@ import {
   PencilOff,
   Plus
 } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
 import {
@@ -38,6 +38,9 @@ import useGetUnits from '@src/api/hooks/useGetUnits'
 import useGetShoppingItems from '@src/api/hooks/useGetShoppingItems'
 import usePostShoppingListItem from '@src/api/hooks/usePostShoppingListItem'
 
+export type ShoppingListItemsSortingType = 'alphabetically' | 'timestamp'
+const defaultSorting: ShoppingListItemsSortingType = 'alphabetically'
+
 const ShoppingListView = () => {
   const params = useParams()
 
@@ -45,6 +48,8 @@ const ShoppingListView = () => {
   const [isDocxDownloading, setIsDocxDownloading] = useState(false)
   const [isEditionMode, setIsEditionMode] = useState(false)
   const [isAdditionModalVisible, setIsAdditionModalVisible] = useState(false)
+  const [sorting, setSorting] =
+    useState<ShoppingListItemsSortingType>(defaultSorting)
 
   const [
     undiscoveredCreatedAndUpdatedItems,
@@ -285,6 +290,16 @@ const ShoppingListView = () => {
     </div>
   )
 
+  const sortingCompareFunction = useMemo(() => {
+    if (sorting === 'alphabetically')
+      return (entry1: ShoppingListEntry, entry2: ShoppingListEntry) =>
+        entry1.product_name.localeCompare(entry2.product_name)
+    else
+      return (entry1: ShoppingListEntry, entry2: ShoppingListEntry) =>
+        new Date(entry2.updated_at ?? 0).getTime() -
+        new Date(entry1.updated_at ?? 0).getTime()
+  }, [sorting])
+
   return (
     <>
       <div className={styles.shoppingListsView}>
@@ -374,6 +389,18 @@ const ShoppingListView = () => {
                 <header>Opis: </header>
                 {shoppingListData?.description ?? 'Brak opisu'}
               </section>
+              <section className={styles.displaySettingsSection}>
+                <header>Ustawienia wyświetlania</header>
+                <span>Sortuj wg:</span>
+                <select
+                  onChange={(e) =>
+                    setSorting(e.target.value as ShoppingListItemsSortingType)
+                  }
+                >
+                  <option value='alphabetically'>Alfabetycznie</option>
+                  <option value='timestamp'>Data ostatniej aktualizacji</option>
+                </select>
+              </section>
               <hr className='pdf-element' />
               <section>
                 <header className='pdf-element'>Przedmioty zakupowe</header>
@@ -397,24 +424,19 @@ const ShoppingListView = () => {
                     [[], []]
                   )
                   .map((group) =>
-                    group
-                      .sort((entry1, entry2) =>
-                        entry1.product_name.localeCompare(entry2.product_name)
-                      )
-                      .map((entry) => (
-                        <div key={entry.id} className='pdf-element'>
-                          <ShoppingListItem
-                            shoppingListEntry={entry}
-                            shoppingListId={shoppingListData.id}
-                            modificationType={getModificationType(
-                              entry.id || -1
-                            )}
-                            loadChangesFromIdb={loadChangesFromIDB}
-                            isEditionMode={isEditionMode}
-                          />
-                          <hr />
-                        </div>
-                      ))
+                    group.sort(sortingCompareFunction).map((entry) => (
+                      <div key={entry.id} className='pdf-element'>
+                        <ShoppingListItem
+                          shoppingListEntry={entry}
+                          shoppingListId={shoppingListData.id}
+                          modificationType={getModificationType(entry.id || -1)}
+                          loadChangesFromIdb={loadChangesFromIDB}
+                          isEditionMode={isEditionMode}
+                          sorting={sorting}
+                        />
+                        <hr />
+                      </div>
+                    ))
                   )}
                 {undiscoveredDeletedItems.map((item, index) => (
                   <div key={index} className='pdf-element'>

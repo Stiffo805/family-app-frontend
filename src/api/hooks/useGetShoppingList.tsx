@@ -15,6 +15,7 @@ export type ShoppingListEntry = {
   unit_display: string | null
   extra_notes: string | null
   is_checked: boolean
+  updated_at?: string
 }
 
 type ShoppingList = ShoppingListInfo & {
