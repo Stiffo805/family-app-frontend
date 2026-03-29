@@ -22,10 +22,16 @@ type ShoppingList = ShoppingListInfo & {
 }
 
 const useGetShoppingList = (props: UseGetShoppingListProps) => {
-  const getShoppingList = (): Promise<ShoppingList> =>
-    axiosClient
-      .get(`/shopping/lists/${props.shoppingListId}`)
+  const getShoppingList = (): Promise<ShoppingList> => {
+    const token = localStorage.getItem('authToken')
+    return axiosClient
+      .get(`/shopping/lists/${props.shoppingListId}`, {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      })
       .then((response) => response.data)
+  }
 
   const shoppingListQuery = useQuery({
     queryKey: [`shoppingList-${props.shoppingListId}`],

@@ -12,10 +12,17 @@ type ShoppingListsInfosList = {
 }
 
 const useGetShoppingLists = () => {
-  const getShoppingLists = (): Promise<ShoppingListsInfosList> => axiosClient
-    .get('/shopping/lists')
-    .then((response) => response.data)
-    .catch((err) => console.error(err))
+  const getShoppingLists = (): Promise<ShoppingListsInfosList> => {
+    const token = localStorage.getItem('authToken')
+    return axiosClient
+      .get('/shopping/lists', {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      })
+      .then((response) => response.data)
+      .catch((err) => console.error(err))
+  }
 
   const shoppingListsQuery = useQuery({
     queryKey: ['shoppingLists'],

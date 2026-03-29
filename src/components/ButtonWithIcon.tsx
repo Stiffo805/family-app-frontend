@@ -15,7 +15,8 @@ type ButtonWithIconProps = {
   variant: 'primary' | 'secondary'
   maxWidth?: number
   maxHeight?: number
-  padding?: number
+  padding?: number | string
+  margin?: number | string
   fontSize?: string
   gap?: string
   iconSize?: number | string
@@ -75,7 +76,8 @@ const ButtonWithIcon = (props: ButtonWithIconProps) => {
       style={{
         maxHeight: props.maxHeight,
         padding: props.padding ?? DEFAULT_PADDING,
-        fontSize: props.fontSize ?? DEFAULT_FONT_SIZE
+        fontSize: props.fontSize ?? DEFAULT_FONT_SIZE,
+        margin: props.margin
       }}
     >
       <div style={{ gap: props.gap ?? DEFAULT_GAP }}>

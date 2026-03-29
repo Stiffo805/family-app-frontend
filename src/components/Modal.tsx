@@ -20,7 +20,9 @@ const Modal = (props: ModalProps) => {
         className={styles.modalBackground}
         onClick={() => props.setIsModalVisible(false)}
       ></div>
-      <div className={styles.modalContainer}>
+      <div
+        className={styles.modalContainer}
+      >
         {props.isLoading && (
           <>
             <div className={styles.modalBackground}></div>

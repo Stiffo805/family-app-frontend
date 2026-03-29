@@ -56,3 +56,32 @@
     background-color: var(--stone2);
   }
 }
+
+.additionModalBody {
+  padding-top: 15px;
+
+  p {
+    font-size: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  input, select {
+    background-color: var(--white1);
+    padding: 5px;
+    width: 90%;
+    border: none;
+  }
+
+  .modalButtonsContainer {
+    display: flex;
+    justify-content: end;
+    margin-right: 10%;
+    margin-top: 32px;
+    gap: 10px;
+
+    & > button {
+      padding: 5px 10px;
+    }
+  }
+}

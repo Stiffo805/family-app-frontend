@@ -11,7 +11,7 @@
 
 .modalContainer {
   position: fixed;
-  top: 30%;
+  top: 10%;
   left: calc(50% - 180px);
   width: 360px;
   min-height: 100px;
