@@ -1,5 +1,5 @@
-import { axiosClient } from "@src/api/axios"
-import { useQuery } from "@tanstack/react-query"
+import { axiosClient } from '@src/api/axios'
+import { useQuery } from '@tanstack/react-query'
 
 type CustomUnit = {
   value: string
@@ -11,10 +11,16 @@ type UnitsResponse = {
 }
 
 const useGetUnits = () => {
-  const getUnits = (): Promise<UnitsResponse> =>
-    axiosClient
-      .get(`/shopping/units`)
+  const getUnits = (): Promise<UnitsResponse> => {
+    const token = localStorage.getItem('authToken')
+    return axiosClient
+      .get(`/shopping/units`, {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      })
       .then((response) => response.data)
+  }
 
   const unitsQuery = useQuery({
     queryKey: [`units`],

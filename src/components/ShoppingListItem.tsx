@@ -1,3 +1,4 @@
+import useDeleteShoppingListItem from '@src/api/hooks/useDeleteShoppingListItem'
 import type { ShoppingListEntry } from '@src/api/hooks/useGetShoppingList'
 import useGetUnits from '@src/api/hooks/useGetUnits'
 import usePatchShoppingListItem from '@src/api/hooks/usePatchShoppingListItem'
@@ -8,6 +9,7 @@ import {
   type ModificationType
 } from '@src/api/indexedDb'
 import ButtonWithIcon from '@src/components/ButtonWithIcon'
+import ConfirmationModal from '@src/components/ConfirmationModal'
 import ErrorSpan from '@src/components/ErrorSpan'
 import Modal from '@src/components/Modal'
 import styles from '@src/components/ShoppingListItem.module.css'
@@ -24,6 +26,10 @@ type ShoppingListItemProps = {
 
 const ShoppingListItem = (props: ShoppingListItemProps) => {
   const [isEditionModalVisible, setIsEditionModalVisible] = useState(false)
+  const [
+    isDeleteItemConfirmationModalVisible,
+    setIsDeleteItemConfirmationModalVisible
+  ] = useState(false)
 
   const { data: units } = useGetUnits()
 
@@ -41,6 +47,19 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
     entryId: props.shoppingListEntry.id || -1,
     shoppingListId: props.shoppingListId || -1,
     isChecked: !props.shoppingListEntry.is_checked
+  })
+
+  const {
+    mutate: deleteItem,
+    isPending: isDeleteItemPending,
+    isError: isDeleteItemError
+  } = useDeleteShoppingListItem({
+    shoppingListId: props.shoppingListId || -1,
+    entryId: props.shoppingListEntry.id || -1,
+    onSuccess: () => {
+      setIsDeleteItemConfirmationModalVisible(false)
+      setIsEditionModalVisible(false)
+    }
   })
 
   const getBackgroundColor = () => {
@@ -84,8 +103,12 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
 
           const formData = new FormData(e.currentTarget)
 
-          const quantity = Number(formData.get('quantity')) ? Number(formData.get('quantity')) : null
-          const unit = formData.get('unit') ? formData.get('unit')?.toString() : null
+          const quantity = Number(formData.get('quantity'))
+            ? Number(formData.get('quantity'))
+            : null
+          const unit = formData.get('unit')
+            ? formData.get('unit')?.toString()
+            : null
           const extraNotes = formData.get('extraNotes')?.toString()
 
           updateItem({ quantity, unit, extraNotes })
@@ -113,12 +136,25 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
           defaultValue={props.shoppingListEntry.extra_notes || ''}
           name='extraNotes'
         />
-        {isUpdateItemError && <ErrorSpan errorText='Wystąpił błąd' />}
+        <br />
+        {isUpdateItemError ||
+          (isDeleteItemError && <ErrorSpan errorText='Wystąpił błąd' />)}
         <div className={styles.modalButtonsContainer}>
-          <button type='submit'>Zapisz</button>
-          <button type='button' onClick={() => setIsEditionModalVisible(false)}>
-            Anuluj
+          <button
+            type='button'
+            onClick={() => setIsDeleteItemConfirmationModalVisible(true)}
+          >
+            Usuń z tej listy
           </button>
+          <div>
+            <button type='submit'>Zapisz</button>
+            <button
+              type='button'
+              onClick={() => setIsEditionModalVisible(false)}
+            >
+              Anuluj
+            </button>
+          </div>
         </div>
       </form>
     </div>
@@ -192,6 +228,15 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
         setIsModalVisible={setIsEditionModalVisible}
         body={modalBody}
         isLoading={isUpdateItemPending}
+      />
+      <ConfirmationModal
+        isModalVisible={isDeleteItemConfirmationModalVisible}
+        setIsModalVisible={setIsDeleteItemConfirmationModalVisible}
+        text='Czy na pewno usunąć ten przedmiot zakupowy z tej listy?'
+        onSubmit={deleteItem}
+        isLoading={isDeleteItemPending}
+        error={isDeleteItemError ? 'Wystąpił błąd' : undefined}
+        dontCloseOnSubmit
       />
     </>
   )
