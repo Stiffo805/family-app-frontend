@@ -13,8 +13,8 @@ const ActivitySummaryBarChart = (props: ActivitySummaryChartProps) => {
     <ActivityCard
       title='Podsumowanie - wykres'
       body={
-        <ResponsiveContainer height={400} width='100%'>
-          <BarChart barCategoryGap='10%' barGap={4} data={chartData}>
+        <ResponsiveContainer height={900} width='100%'>
+          <BarChart barCategoryGap='2%' barGap={4} data={chartData}>
             <Bar
               dataKey='time_spent_hours'
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,7 +24,14 @@ const ActivitySummaryBarChart = (props: ActivitySummaryChartProps) => {
                 return <Rectangle {...props} fill={fillColor} />
               }}
             />
-            <XAxis dataKey='activity_name' />
+            <XAxis
+              dataKey='activity_name'
+              interval={0}
+              angle={-90}
+              textAnchor='end'
+              fontSize='clamp(14px, 2.5cqw, 24px)'
+              height={500}
+            />
           </BarChart>
         </ResponsiveContainer>
       }
