@@ -5,8 +5,12 @@ ul,
     }
 
     & > li {
-      margin-left: 25px;
-      padding-left: 20px;
+
+      &.usualListElement {
+        margin-left: 25px;
+        padding-left: 20px;
+      }
+
       color: var(--rose2);
       font-weight: var(--fw2);
 

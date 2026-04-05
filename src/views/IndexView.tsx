@@ -29,6 +29,15 @@ const IndexView = () => {
           />
           <p>Wymaga logowania</p>
         </nav>
+        <nav>
+          <ButtonWithIcon
+            text='Przejdź do aktywności'
+            icon={ArrowRight}
+            variant='secondary'
+            onClick={() => navigate('/activities')}
+          />
+          <p>Wymaga logowania</p>
+        </nav>
       </div>
     </div>
   )
