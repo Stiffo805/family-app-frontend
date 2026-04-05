@@ -10,6 +10,7 @@ import ShoppingListView from '@src/views/ShoppingListView'
 import LoginView from '@src/views/LoginView'
 import ProtectedRoutes from '@src/components/ProtectedRoutes'
 import IsAliveProvider from '@src/components/IsAliveProvider'
+import ActivitiesView from '@src/views/ActivitiesView'
 
 const router = createBrowserRouter(
   [
@@ -25,7 +26,14 @@ const router = createBrowserRouter(
           element: <Navigate to='/shopping/lists' replace />
         },
         { path: '/shopping/lists', Component: ShoppingListsView },
-        { path: '/shopping/lists/:shoppingListId', Component: ShoppingListView }
+        {
+          path: '/shopping/lists/:shoppingListId',
+          Component: ShoppingListView
+        },
+        {
+          path: '/activities',
+          Component: ActivitiesView
+        }
       ]
     }
   ],

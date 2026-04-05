@@ -1,0 +1,7 @@
+.summaryBadge {
+  display: inline-block;
+
+  &:not(:last-child) {
+    margin-right: 20px;
+  }
+}
