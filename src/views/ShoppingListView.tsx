@@ -28,8 +28,6 @@ import { usePushStatus } from '@src/api/hooks/usePushStatus'
 import {
   initChangesDB,
   retrieveCreatedAndUpdatedItems,
-  retrieveDeletedItems,
-  type DeletedItemRecord,
   type ModifiedItemRecord
 } from '@src/api/indexedDb'
 import Modal from '@src/components/Modal'
@@ -37,6 +35,7 @@ import ErrorSpan from '@src/components/ErrorSpan'
 import useGetUnits from '@src/api/hooks/useGetUnits'
 import useGetShoppingItems from '@src/api/hooks/useGetShoppingItems'
 import usePostShoppingListItem from '@src/api/hooks/usePostShoppingListItem'
+import useGetTags from '@src/api/hooks/useGetTags'
 
 export type ShoppingListItemsSortingType = 'alphabetically' | 'timestamp'
 const defaultSorting: ShoppingListItemsSortingType = 'alphabetically'
@@ -50,14 +49,11 @@ const ShoppingListView = () => {
   const [isAdditionModalVisible, setIsAdditionModalVisible] = useState(false)
   const [sorting, setSorting] =
     useState<ShoppingListItemsSortingType>(defaultSorting)
-
+  const [tagIdToFilterBy, setTagIdToFilterBy] = useState<number | null>(null)
   const [
     undiscoveredCreatedAndUpdatedItems,
     setUndiscoveredCreatedAndUpdatedItems
   ] = useState<ModifiedItemRecord[]>([])
-  const [undiscoveredDeletedItems, setUndiscoveredDeletedItems] = useState<
-    DeletedItemRecord[]
-  >([])
 
   const { isSubscribed, setIsSubscribed } = usePushStatus(
     Number(params.shoppingListId)
@@ -71,6 +67,8 @@ const ShoppingListView = () => {
   const { data: units } = useGetUnits()
 
   const { data: shoppingItems } = useGetShoppingItems()
+
+  const { data: allTags } = useGetTags()
 
   const {
     mutate: createItem,
@@ -216,8 +214,6 @@ const ShoppingListView = () => {
     const db = await initChangesDB()
     const createdAndUpdatedItems = await retrieveCreatedAndUpdatedItems(db)
     setUndiscoveredCreatedAndUpdatedItems(createdAndUpdatedItems)
-    const deletedItems = await retrieveDeletedItems(db)
-    setUndiscoveredDeletedItems(deletedItems)
   }
 
   const getModificationType = (listItemId: number) => {
@@ -400,6 +396,20 @@ const ShoppingListView = () => {
                   <option value='alphabetically'>Alfabetycznie</option>
                   <option value='timestamp'>Data ostatniej aktualizacji</option>
                 </select>
+                <br />
+                <br />
+                <span>Wyświetl produkty z tagami:</span>
+                <select
+                  onChange={(e) => {
+                    if (e.target.value === 'all') setTagIdToFilterBy(null)
+                    else setTagIdToFilterBy(Number(e.target.value))
+                  }}
+                >
+                  <option value='all'>Wszystkie</option>
+                  {allTags?.items.map((item) => (
+                    <option value={item.id}>{item.name}</option>
+                  ))}
+                </select>
               </section>
               <hr className='pdf-element' />
               <section>
@@ -415,6 +425,13 @@ const ShoppingListView = () => {
                   />
                 )}
                 {shoppingListData?.entries
+                  .filter((entry) =>
+                    tagIdToFilterBy !== null
+                      ? entry.tags
+                          .map((tag) => tag.id)
+                          .includes(tagIdToFilterBy)
+                      : true
+                  )
                   .reduce<[ShoppingListEntry[], ShoppingListEntry[]]>(
                     (acc, cur) => {
                       if (!cur.is_checked) acc[0].push(cur)
@@ -427,6 +444,7 @@ const ShoppingListView = () => {
                     group.sort(sortingCompareFunction).map((entry) => (
                       <div key={entry.id} className='pdf-element'>
                         <ShoppingListItem
+                          tagsNames={entry.tags.map((tag) => tag.name)}
                           shoppingListEntry={entry}
                           shoppingListId={shoppingListData.id}
                           modificationType={getModificationType(entry.id || -1)}
@@ -438,16 +456,6 @@ const ShoppingListView = () => {
                       </div>
                     ))
                   )}
-                {undiscoveredDeletedItems.map((item, index) => (
-                  <div key={index} className='pdf-element'>
-                    <ShoppingListItem
-                      shoppingListEntry={item}
-                      modificationType='deleted'
-                      loadChangesFromIdb={loadChangesFromIDB}
-                    />
-                    <hr />
-                  </div>
-                ))}
               </section>
             </article>
           </main>

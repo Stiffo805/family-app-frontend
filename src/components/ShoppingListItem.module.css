@@ -50,6 +50,12 @@
     font-style: italic;
     font-weight: 200;
   }
+
+  .tagsNames {
+    font-size: clamp(7px, 1.1vw, 18px);
+    background-color: var(--white2);
+    padding: 5px;
+  }
 }
 
 .editionModalBody {

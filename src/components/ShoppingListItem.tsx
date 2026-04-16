@@ -21,6 +21,7 @@ import { useState } from 'react'
 type ShoppingListItemProps = {
   shoppingListId?: number
   shoppingListEntry: ShoppingListEntry
+  tagsNames: string[]
   modificationType?: ModificationType
   loadChangesFromIdb: () => void
   isEditionMode?: boolean
@@ -208,6 +209,14 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
                   {props.shoppingListEntry.updated_at
                     ? convertDateToReadable(props.shoppingListEntry.updated_at)
                     : 'Brak informacji'}
+                </span>
+              </>
+            )}
+            {props.tagsNames.length > 0 && (
+              <>
+                <br />
+                <span className={styles.tagsNames}>
+                  {props.tagsNames.join(', ')}
                 </span>
               </>
             )}

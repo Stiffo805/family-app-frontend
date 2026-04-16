@@ -1,5 +1,6 @@
 import { axiosClient } from '@src/api/axios'
 import type { ShoppingListInfo } from '@src/api/hooks/useGetShoppingLists'
+import type { Tag } from '@src/api/hooks/useGetTags'
 import { useQuery } from '@tanstack/react-query'
 
 type UseGetShoppingListProps = {
@@ -10,6 +11,7 @@ export type ShoppingListEntry = {
   id?: number
   product_id?: number
   product_name: string
+  tags: Tag[]
   quantity: number | null
   unit?: string | null
   unit_display: string | null
