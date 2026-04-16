@@ -398,7 +398,7 @@ const ShoppingListView = () => {
                 </select>
                 <br />
                 <br />
-                <span>Wyświetl produkty z tagami:</span>
+                <span>Wyświetl produkty z etykietami:</span>
                 <select
                   onChange={(e) => {
                     if (e.target.value === 'all') setTagIdToFilterBy(null)
