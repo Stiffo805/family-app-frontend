@@ -9,6 +9,8 @@ type ConfirmationModalProps = {
   setIsModalVisible: Dispatch<SetStateAction<boolean>>
   text: string
   dontCloseOnSubmit?: boolean
+  customSubmitButtonText?: string
+  customCancelButtonText?: string
   error?: string
   isLoading?: boolean
   onCancel?: () => void
@@ -41,7 +43,7 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
               props.setIsModalVisible(false)
             }}
           >
-            Anuluj
+            {props.customCancelButtonText ?? 'Anuluj'}
           </button>
           <button
             onClick={(e) => {
@@ -50,7 +52,7 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
               if (!props.dontCloseOnSubmit) props.setIsModalVisible(false)
             }}
           >
-            Potwierdź
+            {props.customSubmitButtonText ?? 'Potwierdź'}
           </button>
         </div>
       </div>

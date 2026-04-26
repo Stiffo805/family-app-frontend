@@ -1,6 +1,7 @@
 import type { Dispatch, JSX, SetStateAction } from 'react'
 import styles from '@src/components/Modal.module.css'
 import Spinner from '@src/components/Spinner'
+import ErrorSpan from '@src/components/ErrorSpan'
 
 type ModalProps = {
   isModalVisible: boolean
@@ -8,6 +9,7 @@ type ModalProps = {
   isLoading?: boolean
   title: string | JSX.Element
   body: JSX.Element
+  error?: string
   footer?: JSX.Element
 }
 
@@ -20,9 +22,7 @@ const Modal = (props: ModalProps) => {
         className={styles.modalBackground}
         onClick={() => props.setIsModalVisible(false)}
       ></div>
-      <div
-        className={styles.modalContainer}
-      >
+      <div className={styles.modalContainer}>
         {props.isLoading && (
           <>
             <div className={styles.modalBackground}></div>
@@ -31,6 +31,7 @@ const Modal = (props: ModalProps) => {
         )}
         <div className={styles.modalTitle}>{props.title}</div>
         <div>{props.body}</div>
+        {props.error && <ErrorSpan errorText={props.error} />}
         {props.footer && <div className={styles.footer}>{props.footer}</div>}
       </div>
     </>
