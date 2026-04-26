@@ -11,6 +11,7 @@ import LoginView from '@src/views/LoginView'
 import ProtectedRoutes from '@src/components/ProtectedRoutes'
 import IsAliveProvider from '@src/components/IsAliveProvider'
 import ActivitiesView from '@src/views/ActivitiesView'
+import LackingItemsShoppingListView from '@src/views/LackingItemsShoppingListView'
 
 const router = createBrowserRouter(
   [
@@ -26,6 +27,10 @@ const router = createBrowserRouter(
           element: <Navigate to='/shopping/lists' replace />
         },
         { path: '/shopping/lists', Component: ShoppingListsView },
+        {
+          path: '/shopping/lists/lacking-items',
+          Component: LackingItemsShoppingListView
+        },
         {
           path: '/shopping/lists/:shoppingListId',
           Component: ShoppingListView
