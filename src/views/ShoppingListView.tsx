@@ -6,7 +6,7 @@ import GoBackArrow from '@src/components/GoBackArrow'
 import LogoutButton from '@src/components/LogoutButton'
 import ShoppingListItem from '@src/components/ShoppingListItem'
 import Spinner from '@src/components/Spinner'
-import styles from '@src/views/ShoppingListView.module.css'
+import commonStyles from '@src/commonStyles/ShoppingListViewCommonStyles.module.css'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import {
@@ -228,7 +228,7 @@ const ShoppingListView = () => {
   }, [])
 
   const modalBody = (
-    <div className={styles.additionModalBody}>
+    <div className={commonStyles.additionModalBody}>
       <hr />
       <form
         onSubmit={(e) => {
@@ -273,7 +273,7 @@ const ShoppingListView = () => {
         {isCreateItemError && createItemStatus !== 409 && (
           <ErrorSpan errorText='Wystąpił błąd' />
         )}
-        <div className={styles.modalButtonsContainer}>
+        <div className={commonStyles.modalButtonsContainer}>
           <button type='submit'>Zapisz</button>
           <button
             type='button'
@@ -298,7 +298,7 @@ const ShoppingListView = () => {
 
   return (
     <>
-      <div className={styles.shoppingListsView}>
+      <div className={commonStyles.shoppingListsView}>
         <LogoutButton />
         <GoBackArrow targetUrl='/shopping/lists' />
         {isShoppingListDataLoading ? (
@@ -352,16 +352,16 @@ const ShoppingListView = () => {
               onClick={() => setIsEditionMode((cur) => !cur)}
             />
             <article
-              className={styles.shoppingListContainer}
+              className={commonStyles.shoppingListContainer}
               ref={shoppingListContainerRef}
             >
-              <div className={`${styles.mainHeaderContainer} pdf-element`}>
-                <header className={styles.mainHeader}>
+              <div className={`${commonStyles.mainHeaderContainer} pdf-element`}>
+                <header className={commonStyles.mainHeader}>
                   Tytuł: {shoppingListData?.title}
                 </header>
               </div>
               <div
-                className={styles.buttonsContainer}
+                className={commonStyles.buttonsContainer}
                 data-html2canvas-ignore='true'
               >
                 <ButtonWithIcon
@@ -385,7 +385,7 @@ const ShoppingListView = () => {
                 <header>Opis: </header>
                 {shoppingListData?.description ?? 'Brak opisu'}
               </section>
-              <section className={styles.displaySettingsSection}>
+              <section className={commonStyles.displaySettingsSection}>
                 <header>Ustawienia wyświetlania</header>
                 <span>Sortuj wg:</span>
                 <select

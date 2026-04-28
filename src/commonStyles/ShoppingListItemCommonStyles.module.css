@@ -1,0 +1,98 @@
+.shoppingListItem {
+  display: block;
+  font-size: clamp(15px, 2.5vw, 24px);
+  padding: 10px;
+  padding-top: 15px;
+
+  &.checkedListItem {
+    opacity: 0.4;
+  }
+
+  .mainEntryContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .textContentContainer {
+    max-width: 90%;
+  }
+
+  .entryName {
+    color: var(--rose2);
+    font-weight: var(--fw2);
+  }
+
+  .additionalNotes {
+    font-size: clamp(13px, 2vw, 20px);
+    color: var(--stone3);
+  }
+
+  .modificationTypeLabel {
+    font-size: clamp(7px, 1.1vw, 18px);
+    color: var(--stone5);
+    font-style: italic;
+  }
+
+  input[type=checkbox] {
+    width: clamp(20px, 2.5vw, 24px);
+    height: clamp(20px, 2.5vw, 24px);
+  }
+
+  .shoppingItemPostfix {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .lastUpdateDateLabel {
+    font-size: clamp(12px, 2vw, 18px);
+    font-style: italic;
+    font-weight: 200;
+  }
+
+  .tagsNames {
+    display: block;
+    width: max-content;
+    font-size: clamp(12px, 1.5vw, 18px);
+    background-color: var(--white2);
+    padding: 5px;
+    margin-top: 5px;
+  }
+}
+
+.editionModalBody {
+  padding-top: 15px;
+
+  p {
+    font-size: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  input, select {
+    background-color: var(--white1);
+    padding: 5px;
+    width: 90%;
+    border: none;
+  }
+
+  .modalButtonsContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-right: 10%;
+    margin-top: 32px;
+
+    & button {
+      padding: 5px 10px;
+
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
+    }
+
+    & > button {
+      color: var(--red1);
+    }
+  }
+}

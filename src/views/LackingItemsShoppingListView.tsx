@@ -8,6 +8,7 @@ import {
   PencilOff
 } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import commonStyles from '@src/commonStyles/ShoppingListViewCommonStyles.module.css'
 import styles from '@src/views/LackingItemsShoppingListView.module.css'
 import useGetLackingShoppingListItems, {
   type LackingShoppingListItemsListEntry
@@ -286,7 +287,7 @@ const LackingItemsShoppingListView = () => {
 
   return (
     <>
-      <div className={styles.shoppingListsView}>
+      <div className={commonStyles.shoppingListsView}>
         <LogoutButton />
         <GoBackArrow targetUrl='/shopping/lists' />
         {isLackingShoppingListItemsDataLoading ? (
@@ -310,16 +311,16 @@ const LackingItemsShoppingListView = () => {
               onClick={() => setIsEditionMode((cur) => !cur)}
             />
             <article
-              className={styles.shoppingListContainer}
+              className={commonStyles.shoppingListContainer}
               ref={shoppingListContainerRef}
             >
-              <div className={`${styles.mainHeaderContainer} pdf-element`}>
-                <header className={styles.mainHeader}>
+              <div className={`${commonStyles.mainHeaderContainer} pdf-element`}>
+                <header className={commonStyles.mainHeader}>
                   Tytuł: Brakujące produkty <em>(Lista specjalna)</em>
                 </header>
               </div>
               <div
-                className={styles.buttonsContainer}
+                className={commonStyles.buttonsContainer}
                 data-html2canvas-ignore='true'
               >
                 <ButtonWithIcon
@@ -344,7 +345,7 @@ const LackingItemsShoppingListView = () => {
                 Lista przechowująca brakujące produkty, dla których nie wiadomo,
                 na którą listę je wpisać
               </section>
-              <section className={styles.displaySettingsSection}>
+              <section className={commonStyles.displaySettingsSection}>
                 <header>Ustawienia wyświetlania</header>
                 <span>Sortuj wg:</span>
                 <select
@@ -390,7 +391,7 @@ const LackingItemsShoppingListView = () => {
                           else setCheckedItems([])
                           setIsGlobalSelected((cur) => !cur)
                         }}
-                        fontSize='16px'
+                        fontSize='clamp(14px, 2vw, 20px)'
                         padding={5}
                         iconSize={16}
                       />
@@ -402,7 +403,7 @@ const LackingItemsShoppingListView = () => {
                         icon={ArrowUpRight}
                         variant='primary'
                         onClick={() => setIsExportModalVisible(true)}
-                        fontSize='16px'
+                        fontSize='clamp(14px, 2vw, 20px)'
                         padding={5}
                         iconSize={16}
                       />

@@ -12,7 +12,7 @@ import ButtonWithIcon from '@src/components/ButtonWithIcon'
 import ConfirmationModal from '@src/components/ConfirmationModal'
 import ErrorSpan from '@src/components/ErrorSpan'
 import Modal from '@src/components/Modal'
-import styles from '@src/components/ShoppingListItem.module.css'
+import commonStyles from '@src/commonStyles/ShoppingListItemCommonStyles.module.css'
 import { convertDateToReadable } from '@src/util/helpers'
 import type { ShoppingListItemsSortingType } from '@src/views/ShoppingListView'
 import { Pencil } from 'lucide-react'
@@ -99,7 +99,7 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
   }
 
   const modalBody = (
-    <div className={styles.editionModalBody}>
+    <div className={commonStyles.editionModalBody}>
       <hr />
       <form
         onSubmit={(e) => {
@@ -143,7 +143,7 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
         <br />
         {isUpdateItemError ||
           (isDeleteItemError && <ErrorSpan errorText='Wystąpił błąd' />)}
-        <div className={styles.modalButtonsContainer}>
+        <div className={commonStyles.modalButtonsContainer}>
           <button
             type='button'
             onClick={() => setIsDeleteItemConfirmationModalVisible(true)}
@@ -167,28 +167,28 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
   return (
     <>
       <li
-        className={`${styles.shoppingListItem} ${props.shoppingListEntry.is_checked ? styles.checkedListItem : ''}`}
+        className={`${commonStyles.shoppingListItem} ${props.shoppingListEntry.is_checked ? commonStyles.checkedListItem : ''}`}
         style={{
           backgroundColor: getBackgroundColor()
         }}
         onClick={acknowledge}
       >
-        <div className={styles.mainEntryContainer}>
-          <div className={styles.textContentContainer}>
-            <span className={styles.entryName}>
+        <div className={commonStyles.mainEntryContainer}>
+          <div className={commonStyles.textContentContainer}>
+            <span className={commonStyles.entryName}>
               {props.shoppingListEntry.product_name}
             </span>{' '}
             {Number(props.shoppingListEntry.quantity) > 0 && (
               <>
                 -{' '}
-                <span className={styles.entryAmount}>
+                <span className={commonStyles.entryAmount}>
                   {Number(props.shoppingListEntry.quantity)}{' '}
                   {props.shoppingListEntry.unit_display}
                 </span>
               </>
             )}
             <br />
-            <span className={styles.additionalNotes}>
+            <span className={commonStyles.additionalNotes}>
               {props.shoppingListEntry.extra_notes
                 ? props.shoppingListEntry.extra_notes
                 : 'Brak uwag'}
@@ -196,7 +196,7 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
             {props.modificationType && (
               <>
                 <br />
-                <span className={styles.modificationTypeLabel}>
+                <span className={commonStyles.modificationTypeLabel}>
                   {getModificationTypeLabel()}
                 </span>
               </>
@@ -204,7 +204,7 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
             {props.sorting === 'timestamp' && (
               <>
                 <br />
-                <span className={styles.lastUpdateDateLabel}>
+                <span className={commonStyles.lastUpdateDateLabel}>
                   Ostatnia aktualizacja:{' '}
                   {props.shoppingListEntry.updated_at
                     ? convertDateToReadable(props.shoppingListEntry.updated_at)
@@ -215,13 +215,13 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
             {props.tagsNames.length > 0 && (
               <>
                 <br />
-                <span className={styles.tagsNames}>
+                <span className={commonStyles.tagsNames}>
                   {props.tagsNames.join(', ')}
                 </span>
               </>
             )}
           </div>
-          <div className={styles.shoppingItemPostfix}>
+          <div className={commonStyles.shoppingItemPostfix}>
             {props.isEditionMode && (
               <ButtonWithIcon
                 icon={Pencil}
