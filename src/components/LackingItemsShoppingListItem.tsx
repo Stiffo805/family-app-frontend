@@ -1,5 +1,6 @@
 import type { LackingShoppingListItemsListEntry } from '@src/api/hooks/useGetLackingShoppingListItems'
 import usePatchLackingShoppingListItem from '@src/api/hooks/usePatchLackingShoppingListItem'
+import commonStyles from '@src/commonStyles/ShoppingListItemCommonStyles.module.css'
 import styles from '@src/components/LackingItemsShoppingListItem.module.css'
 import { convertDateToReadable } from '@src/util/helpers'
 import type { ShoppingListItemsSortingType } from '@src/views/ShoppingListView'
@@ -21,10 +22,10 @@ const LackingItemsShoppingListItem = (props: ShoppingListItemProps) => {
   return (
     <>
       <li
-        className={`${styles.shoppingListItem} ${props.lackingItemsShoppingListEntry.is_checked ? styles.checkedListItem : ''}`}
+        className={`${commonStyles.shoppingListItem} ${props.lackingItemsShoppingListEntry.is_checked ? commonStyles.checkedListItem : ''}`}
         style={{}}
       >
-        <div className={styles.mainEntryContainer}>
+        <div className={commonStyles.mainEntryContainer}>
           {props.isEditionMode && (
             <div className={styles.leftCheckbox}>
               <input
@@ -36,21 +37,21 @@ const LackingItemsShoppingListItem = (props: ShoppingListItemProps) => {
               />
             </div>
           )}
-          <div className={styles.textContentContainer}>
-            <span className={styles.entryName}>
+          <div className={commonStyles.textContentContainer}>
+            <span className={commonStyles.entryName}>
               {props.lackingItemsShoppingListEntry.product_name}
             </span>{' '}
             {Number(props.lackingItemsShoppingListEntry.quantity) > 0 && (
               <>
                 -{' '}
-                <span className={styles.entryAmount}>
+                <span className={commonStyles.entryAmount}>
                   {Number(props.lackingItemsShoppingListEntry.quantity)}{' '}
                   {props.lackingItemsShoppingListEntry.unit_display}
                 </span>
               </>
             )}
             <br />
-            <span className={styles.additionalNotes}>
+            <span className={commonStyles.additionalNotes}>
               {props.lackingItemsShoppingListEntry.extra_notes
                 ? props.lackingItemsShoppingListEntry.extra_notes
                 : 'Brak uwag'}
@@ -58,7 +59,7 @@ const LackingItemsShoppingListItem = (props: ShoppingListItemProps) => {
             {props.sorting === 'timestamp' && (
               <>
                 <br />
-                <span className={styles.lastUpdateDateLabel}>
+                <span className={commonStyles.lastUpdateDateLabel}>
                   Ostatnia aktualizacja:{' '}
                   {props.lackingItemsShoppingListEntry.updated_at
                     ? convertDateToReadable(
@@ -71,7 +72,7 @@ const LackingItemsShoppingListItem = (props: ShoppingListItemProps) => {
             {props.tagsNames.length > 0 && (
               <>
                 <br />
-                <span className={styles.tagsNames}>
+                <span className={commonStyles.tagsNames}>
                   {props.tagsNames.join(', ')}
                 </span>
               </>
