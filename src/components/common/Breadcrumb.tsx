@@ -1,4 +1,4 @@
-import styles from '@src/components/Breadcrumb.module.css'
+import styles from '@src/components/common/Breadcrumb.module.css'
 
 type BreadcrumbProps = {
   text: string

@@ -1,5 +1,5 @@
 import type { ListItem } from '@src/util/types'
-import styles from '@src/components/List.module.css'
+import styles from '@src/components/common/List.module.css'
 import { useMemo } from 'react'
 
 type ListProps = {

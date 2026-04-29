@@ -1,4 +1,4 @@
-import styles from '@src/components/DarkenedBackground.module.css'
+import styles from '@src/components/common/DarkenedBackground.module.css'
 
 const DarkenedBackground = () => {
   return <div className={styles.darkenedBackground}></div>

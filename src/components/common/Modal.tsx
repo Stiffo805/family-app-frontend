@@ -1,7 +1,7 @@
 import type { Dispatch, JSX, SetStateAction } from 'react'
-import styles from '@src/components/Modal.module.css'
-import Spinner from '@src/components/Spinner'
-import ErrorSpan from '@src/components/ErrorSpan'
+import styles from '@src/components/common/Modal.module.css'
+import Spinner from '@src/components/common/Spinner'
+import ErrorSpan from '@src/components/common/ErrorSpan'
 
 type ModalProps = {
   isModalVisible: boolean

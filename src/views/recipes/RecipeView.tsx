@@ -1,5 +1,5 @@
-import List from '@src/components/List'
-import styles from '@src/views/RecipeView.module.css'
+import List from '@src/components/common/List'
+import styles from '@src/views/recipes/RecipeView.module.css'
 import useGetRecipe from '@src/api/hooks/useGetRecipe'
 import { useParams } from 'react-router'
 import { useMemo } from 'react'
@@ -9,12 +9,12 @@ import {
 } from '@src/util/helpers'
 import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
-import GoBackArrow from '@src/components/GoBackArrow'
+import GoBackArrow from '@src/components/common/GoBackArrow'
 import { Save } from 'lucide-react'
 import useRecipesOffline from '@src/api/hooks/useRecipesOffline'
-import Spinner from '@src/components/Spinner'
+import Spinner from '@src/components/common/Spinner'
 import diff from 'microdiff'
-import ButtonWithIcon from '@src/components/ButtonWithIcon'
+import ButtonWithIcon from '@src/components/common/ButtonWithIcon'
 
 const RecipeView = () => {
   const params = useParams()

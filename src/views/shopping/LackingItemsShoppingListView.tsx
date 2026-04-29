@@ -1,5 +1,5 @@
-import ButtonWithIcon from '@src/components/ButtonWithIcon'
-import type { ShoppingListItemsSortingType } from '@src/views/ShoppingListView'
+import ButtonWithIcon from '@src/components/common/ButtonWithIcon'
+import type { ShoppingListItemsSortingType } from '@src/views/shopping/ShoppingListView'
 import {
   ArrowUpRight,
   CircleCheck,
@@ -9,19 +9,25 @@ import {
 } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import commonStyles from '@src/commonStyles/ShoppingListViewCommonStyles.module.css'
-import styles from '@src/views/LackingItemsShoppingListView.module.css'
+import styles from '@src/views/shopping/LackingItemsShoppingListView.module.css'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import { Paragraph, TextRun, Document, HeadingLevel, Packer } from 'docx'
-import LogoutButton from '@src/components/LogoutButton'
-import GoBackArrow from '@src/components/GoBackArrow'
-import Spinner from '@src/components/Spinner'
-import LackingItemsShoppingListItem from '@src/components/LackingItemsShoppingListItem'
-import Modal from '@src/components/Modal'
-import ConfirmationModal from '@src/components/ConfirmationModal'
+import LogoutButton from '@src/components/common/LogoutButton'
+import GoBackArrow from '@src/components/common/GoBackArrow'
+import Spinner from '@src/components/common/Spinner'
+import LackingItemsShoppingListItem from '@src/components/shopping/LackingItemsShoppingListItem'
+import Modal from '@src/components/common/Modal'
+import ConfirmationModal from '@src/components/common/ConfirmationModal'
 import { useNavigate } from 'react-router'
 import useCustomQuery from '@src/api/hooks/useCustomQuery'
-import type { LackingShoppingListItemsList, LackingShoppingListItemsListEntry, MoveLackingItemsOperationType, ShoppingListsInfosList, TagsResponse } from '@src/util/types'
+import type {
+  LackingShoppingListItemsList,
+  LackingShoppingListItemsListEntry,
+  MoveLackingItemsOperationType,
+  ShoppingListsInfosList,
+  TagsResponse
+} from '@src/util/types'
 import useCustomMutation from '@src/api/hooks/useCustomMutation'
 import { queryClient } from '@src/api/queryClient'
 
@@ -292,8 +298,8 @@ const LackingItemsShoppingListView = () => {
             return
           }
           moveLackingItems({
-            itemsIds: checkedItems.map((item) => item.id || -1),
-            operationType: selectedOperationType
+            lacking_items_ids: checkedItems.map((item) => item.id || -1),
+            operation_type: selectedOperationType
           })
           setIsExportModalVisible(false)
           setIsExportConfirmationModalVisible(true)

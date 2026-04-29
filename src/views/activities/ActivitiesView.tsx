@@ -2,8 +2,8 @@ import useGetActivitiesSummary from '@src/api/hooks/useGetActivitiesSummary'
 import useGetFamilyMembers from '@src/api/hooks/useGetFamilyMembers'
 import ActivitySummary from '@src/components/activities/ActivitySummary'
 import ActivitySummaryBarChart from '@src/components/activities/ActivitySummaryBarChart'
-import GoBackArrow from '@src/components/GoBackArrow'
-import styles from '@src/views/ActivitiesView.module.css'
+import GoBackArrow from '@src/components/common/GoBackArrow'
+import styles from '@src/views/activities/ActivitiesView.module.css'
 import { useState } from 'react'
 
 const ActivitiesView = () => {

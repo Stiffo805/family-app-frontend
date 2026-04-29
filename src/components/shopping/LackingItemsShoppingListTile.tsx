@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router'
-import styles from '@src/components/LackingItemsShoppingListTile.module.css'
+import styles from '@src/components/shopping/LackingItemsShoppingListTile.module.css'
 
 const LackingItemsShoppingListTile = () => {
   const navigate = useNavigate()

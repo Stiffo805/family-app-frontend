@@ -1,8 +1,8 @@
-import ButtonWithIcon from '@src/components/ButtonWithIcon'
-import GoBackArrow from '@src/components/GoBackArrow'
-import LogoutButton from '@src/components/LogoutButton'
-import ShoppingListItem from '@src/components/ShoppingListItem'
-import Spinner from '@src/components/Spinner'
+import ButtonWithIcon from '@src/components/common/ButtonWithIcon'
+import GoBackArrow from '@src/components/common/GoBackArrow'
+import LogoutButton from '@src/components/common/LogoutButton'
+import ShoppingListItem from '@src/components/shopping/ShoppingListItem'
+import Spinner from '@src/components/common/Spinner'
 import commonStyles from '@src/commonStyles/ShoppingListViewCommonStyles.module.css'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
@@ -27,8 +27,8 @@ import {
   retrieveCreatedAndUpdatedItems,
   type ModifiedItemRecord
 } from '@src/api/indexedDb'
-import Modal from '@src/components/Modal'
-import ErrorSpan from '@src/components/ErrorSpan'
+import Modal from '@src/components/common/Modal'
+import ErrorSpan from '@src/components/common/ErrorSpan'
 import useCustomQuery from '@src/api/hooks/useCustomQuery'
 import type {
   ShoppingItemsResponse,

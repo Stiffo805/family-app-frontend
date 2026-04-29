@@ -1,8 +1,8 @@
 import type { RecipeInfo } from '@src/api/hooks/useGetRecipesList'
 import useRecipesOffline from '@src/api/hooks/useRecipesOffline'
-import ButtonWithIcon from '@src/components/ButtonWithIcon'
-import ConfirmationModal from '@src/components/ConfirmationModal'
-import styles from '@src/components/RecipeTile.module.css'
+import ButtonWithIcon from '@src/components/common/ButtonWithIcon'
+import ConfirmationModal from '@src/components/common/ConfirmationModal'
+import styles from '@src/components/recipes/RecipeTile.module.css'
 import {
   convertDurationToReadablePreparationTime,
   parseDuration
@@ -54,7 +54,11 @@ const RecipeTile = (props: RecipeTileProps) => {
           </header>
           <ButtonWithIcon
             icon={props.isRecipeSavedLocally(props.recipe) ? Trash2 : Save}
-            text={props.isRecipeSavedLocally(props.recipe) ? 'Usuń przepis z pamięci przeglądarki' : 'Zapisz przepis w pamięci przeglądarki'}
+            text={
+              props.isRecipeSavedLocally(props.recipe)
+                ? 'Usuń przepis z pamięci przeglądarki'
+                : 'Zapisz przepis w pamięci przeglądarki'
+            }
             variant='secondary'
             disabledTooltip='Odśwież stronę, aby odblokować'
             alwaysShowTooltip

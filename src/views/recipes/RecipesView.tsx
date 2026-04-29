@@ -1,11 +1,11 @@
 import useGetRecipesList, {
   type RecipeInfo
 } from '@src/api/hooks/useGetRecipesList'
-import Breadcrumb from '@src/components/Breadcrumb'
-import GoBackArrow from '@src/components/GoBackArrow'
-import RecipeTile from '@src/components/RecipeTile'
-import Spinner from '@src/components/Spinner'
-import styles from '@src/views/RecipesView.module.css'
+import Breadcrumb from '@src/components/common/Breadcrumb'
+import GoBackArrow from '@src/components/common/GoBackArrow'
+import RecipeTile from '@src/components/recipes/RecipeTile'
+import Spinner from '@src/components/common/Spinner'
+import styles from '@src/views/recipes/RecipesView.module.css'
 import diff from 'microdiff'
 import { useCallback } from 'react'
 

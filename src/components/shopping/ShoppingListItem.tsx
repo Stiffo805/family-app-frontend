@@ -3,13 +3,13 @@ import {
   initChangesDB,
   type ModificationType
 } from '@src/api/indexedDb'
-import ButtonWithIcon from '@src/components/ButtonWithIcon'
-import ConfirmationModal from '@src/components/ConfirmationModal'
-import ErrorSpan from '@src/components/ErrorSpan'
-import Modal from '@src/components/Modal'
+import ButtonWithIcon from '@src/components/common/ButtonWithIcon'
+import ConfirmationModal from '@src/components/common/ConfirmationModal'
+import ErrorSpan from '@src/components/common/ErrorSpan'
+import Modal from '@src/components/common/Modal'
 import commonStyles from '@src/commonStyles/ShoppingListItemCommonStyles.module.css'
 import { convertDateToReadable } from '@src/util/helpers'
-import type { ShoppingListItemsSortingType } from '@src/views/ShoppingListView'
+import type { ShoppingListItemsSortingType } from '@src/views/shopping/ShoppingListView'
 import { Pencil } from 'lucide-react'
 import { useState } from 'react'
 import useCustomMutation from '@src/api/hooks/useCustomMutation'

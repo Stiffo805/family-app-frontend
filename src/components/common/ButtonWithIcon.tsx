@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import styles from '@src/components/ButtonWithIcon.module.css'
+import styles from '@src/components/common/ButtonWithIcon.module.css'
 import {
   useEffect,
   useRef,

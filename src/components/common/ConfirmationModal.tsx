@@ -1,7 +1,7 @@
-import styles from '@src/components/ConfirmationModal.module.css'
-import DarkenedBackground from '@src/components/DarkenedBackground'
-import ErrorSpan from '@src/components/ErrorSpan'
-import Spinner from '@src/components/Spinner'
+import styles from '@src/components/common/ConfirmationModal.module.css'
+import DarkenedBackground from '@src/components/common/DarkenedBackground'
+import ErrorSpan from '@src/components/common/ErrorSpan'
+import Spinner from '@src/components/common/Spinner'
 import type { Dispatch, SetStateAction } from 'react'
 
 type ConfirmationModalProps = {

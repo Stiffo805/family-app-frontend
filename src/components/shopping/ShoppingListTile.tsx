@@ -1,4 +1,4 @@
-import styles from '@src/components/ShoppingListTile.module.css'
+import styles from '@src/components/shopping/ShoppingListTile.module.css'
 import type { ShoppingListInfo } from '@src/util/types'
 import { useNavigate } from 'react-router'
 

@@ -1,10 +1,10 @@
 import useCustomMutation from '@src/api/hooks/useCustomMutation'
 import { queryClient } from '@src/api/queryClient'
 import commonStyles from '@src/commonStyles/ShoppingListItemCommonStyles.module.css'
-import styles from '@src/components/LackingItemsShoppingListItem.module.css'
+import styles from '@src/components/shopping/LackingItemsShoppingListItem.module.css'
 import { convertDateToReadable } from '@src/util/helpers'
 import type { LackingShoppingListItemsListEntry } from '@src/util/types'
-import type { ShoppingListItemsSortingType } from '@src/views/ShoppingListView'
+import type { ShoppingListItemsSortingType } from '@src/views/shopping/ShoppingListView'
 
 type ShoppingListItemProps = {
   lackingItemsShoppingListEntry: LackingShoppingListItemsListEntry

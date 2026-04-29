@@ -1,15 +1,14 @@
 import useCustomQuery from '@src/api/hooks/useCustomQuery'
-import Breadcrumb from '@src/components/Breadcrumb'
-import GoBackArrow from '@src/components/GoBackArrow'
-import LackingItemsShoppingListTile from '@src/components/LackingItemsShoppingListTile'
-import LogoutButton from '@src/components/LogoutButton'
-import ShoppingListTile from '@src/components/ShoppingListTile'
-import Spinner from '@src/components/Spinner'
+import Breadcrumb from '@src/components/common/Breadcrumb'
+import GoBackArrow from '@src/components/common/GoBackArrow'
+import LackingItemsShoppingListTile from '@src/components/shopping/LackingItemsShoppingListTile'
+import LogoutButton from '@src/components/common/LogoutButton'
+import ShoppingListTile from '@src/components/shopping/ShoppingListTile'
+import Spinner from '@src/components/common/Spinner'
 import type { ShoppingListsInfosList } from '@src/util/types'
-import styles from '@src/views/ShoppingListsView.module.css'
+import styles from '@src/views/shopping/ShoppingListsView.module.css'
 
 const ShoppingListsView = () => {
-
   const { data, isLoading } = useCustomQuery<ShoppingListsInfosList>({
     method: 'GET',
     url: '/shopping/lists',

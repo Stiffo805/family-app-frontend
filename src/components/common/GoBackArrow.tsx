@@ -1,5 +1,5 @@
 import { ArrowLeft } from 'lucide-react'
-import styles from '@src/components/GoBackArrow.module.css'
+import styles from '@src/components/common/GoBackArrow.module.css'
 import { useNavigate } from 'react-router'
 
 type GoBackArrowProps = {

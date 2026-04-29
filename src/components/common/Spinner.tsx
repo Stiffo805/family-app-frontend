@@ -1,5 +1,5 @@
 import { Loader } from 'lucide-react'
-import styles from '@src/components/Spinner.module.css'
+import styles from '@src/components/common/Spinner.module.css'
 
 const Spinner = () => {
   return (

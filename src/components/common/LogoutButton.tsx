@@ -1,7 +1,7 @@
-import ButtonWithIcon from '@src/components/ButtonWithIcon'
+import ButtonWithIcon from '@src/components/common/ButtonWithIcon'
 import { LogOut } from 'lucide-react'
-import styles from '@src/components/LogoutButton.module.css'
-import ConfirmationModal from '@src/components/ConfirmationModal'
+import styles from '@src/components/common/LogoutButton.module.css'
+import ConfirmationModal from '@src/components/common/ConfirmationModal'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 
