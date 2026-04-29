@@ -10,24 +10,20 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react'
 import commonStyles from '@src/commonStyles/ShoppingListViewCommonStyles.module.css'
 import styles from '@src/views/LackingItemsShoppingListView.module.css'
-import useGetLackingShoppingListItems, {
-  type LackingShoppingListItemsListEntry
-} from '@src/api/hooks/useGetLackingShoppingListItems'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import { Paragraph, TextRun, Document, HeadingLevel, Packer } from 'docx'
 import LogoutButton from '@src/components/LogoutButton'
 import GoBackArrow from '@src/components/GoBackArrow'
 import Spinner from '@src/components/Spinner'
-import useGetTags from '@src/api/hooks/useGetTags'
 import LackingItemsShoppingListItem from '@src/components/LackingItemsShoppingListItem'
 import Modal from '@src/components/Modal'
-import useGetShoppingLists from '@src/api/hooks/useGetShoppingLists'
-import useMoveLackingItemsToList, {
-  type MoveLackingItemsOperationType
-} from '@src/api/hooks/useMoveLackingItemsToList'
 import ConfirmationModal from '@src/components/ConfirmationModal'
 import { useNavigate } from 'react-router'
+import useCustomQuery from '@src/api/hooks/useCustomQuery'
+import type { LackingShoppingListItemsList, LackingShoppingListItemsListEntry, MoveLackingItemsOperationType, ShoppingListsInfosList, TagsResponse } from '@src/util/types'
+import useCustomMutation from '@src/api/hooks/useCustomMutation'
+import { queryClient } from '@src/api/queryClient'
 
 const defaultSorting: ShoppingListItemsSortingType = 'alphabetically'
 const LackingItemsShoppingListView = () => {
@@ -53,21 +49,44 @@ const LackingItemsShoppingListView = () => {
   const [exportError, setExportError] = useState('')
   const [isGlobalSelected, setIsGlobalSelected] = useState(false)
 
+  const shoppingListContainerRef = useRef<HTMLElement>(null)
+
   const {
     data: lackingShoppingListItems,
     isLoading: isLackingShoppingListItemsDataLoading
-  } = useGetLackingShoppingListItems()
+  } = useCustomQuery<LackingShoppingListItemsList>({
+    method: 'GET',
+    url: '/shopping/items/lacking/',
+    queryKey: ['lackingItems']
+  })
 
   const {
     mutate: moveLackingItems,
     isPending: isMoveLackingItemsMutationPending
-  } = useMoveLackingItemsToList({ targetShoppingListId })
+  } = useCustomMutation({
+    method: 'POST',
+    url: `/shopping/items/lacking/move/${targetShoppingListId}/`,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['lackingItems']
+      })
+      queryClient.invalidateQueries({
+        queryKey: [`shoppingList-${targetShoppingListId}`]
+      })
+    }
+  })
 
-  const { data: allTags } = useGetTags()
+  const { data: allTags } = useCustomQuery<TagsResponse>({
+    method: 'GET',
+    url: '/shopping/tags',
+    queryKey: ['tags']
+  })
 
-  const { data: shoppingLists } = useGetShoppingLists()
-
-  const shoppingListContainerRef = useRef<HTMLElement>(null)
+  const { data: shoppingLists } = useCustomQuery<ShoppingListsInfosList>({
+    method: 'GET',
+    url: '/shopping/lists',
+    queryKey: ['shoppingLists']
+  })
 
   const toggleCheckItem = (entry: LackingShoppingListItemsListEntry) => {
     if (checkedItems.map((item) => item.id).includes(entry.id)) {
@@ -314,7 +333,9 @@ const LackingItemsShoppingListView = () => {
               className={commonStyles.shoppingListContainer}
               ref={shoppingListContainerRef}
             >
-              <div className={`${commonStyles.mainHeaderContainer} pdf-element`}>
+              <div
+                className={`${commonStyles.mainHeaderContainer} pdf-element`}
+              >
                 <header className={commonStyles.mainHeader}>
                   Tytuł: Brakujące produkty <em>(Lista specjalna)</em>
                 </header>

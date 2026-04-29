@@ -1,5 +1,5 @@
-import type { ShoppingListInfo } from '@src/api/hooks/useGetShoppingLists'
 import styles from '@src/components/ShoppingListTile.module.css'
+import type { ShoppingListInfo } from '@src/util/types'
 import { useNavigate } from 'react-router'
 
 type ShoppingListTileProps = {

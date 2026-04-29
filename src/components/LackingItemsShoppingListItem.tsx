@@ -1,8 +1,9 @@
-import type { LackingShoppingListItemsListEntry } from '@src/api/hooks/useGetLackingShoppingListItems'
-import usePatchLackingShoppingListItem from '@src/api/hooks/usePatchLackingShoppingListItem'
+import useCustomMutation from '@src/api/hooks/useCustomMutation'
+import { queryClient } from '@src/api/queryClient'
 import commonStyles from '@src/commonStyles/ShoppingListItemCommonStyles.module.css'
 import styles from '@src/components/LackingItemsShoppingListItem.module.css'
 import { convertDateToReadable } from '@src/util/helpers'
+import type { LackingShoppingListItemsListEntry } from '@src/util/types'
 import type { ShoppingListItemsSortingType } from '@src/views/ShoppingListView'
 
 type ShoppingListItemProps = {
@@ -15,8 +16,13 @@ type ShoppingListItemProps = {
 }
 
 const LackingItemsShoppingListItem = (props: ShoppingListItemProps) => {
-  const { mutate: toggleCheck } = usePatchLackingShoppingListItem({
-    itemId: props.lackingItemsShoppingListEntry.id || -1
+  const { mutate: setChecked } = useCustomMutation({
+    method: 'PATCH',
+    url: `/shopping/items/lacking/${props.lackingItemsShoppingListEntry.id}/`,
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [`lackingItems`]
+      })
   })
 
   return (
@@ -83,7 +89,9 @@ const LackingItemsShoppingListItem = (props: ShoppingListItemProps) => {
               type='checkbox'
               checked={props.lackingItemsShoppingListEntry.is_checked}
               onClick={() =>
-                toggleCheck(!props.lackingItemsShoppingListEntry.is_checked)
+                setChecked({
+                  is_checked: !props.lackingItemsShoppingListEntry.is_checked
+                })
               }
             />
           </div>

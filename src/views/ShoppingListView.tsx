@@ -1,6 +1,3 @@
-import useGetShoppingList, {
-  type ShoppingListEntry
-} from '@src/api/hooks/useGetShoppingList'
 import ButtonWithIcon from '@src/components/ButtonWithIcon'
 import GoBackArrow from '@src/components/GoBackArrow'
 import LogoutButton from '@src/components/LogoutButton'
@@ -32,10 +29,16 @@ import {
 } from '@src/api/indexedDb'
 import Modal from '@src/components/Modal'
 import ErrorSpan from '@src/components/ErrorSpan'
-import useGetUnits from '@src/api/hooks/useGetUnits'
-import useGetShoppingItems from '@src/api/hooks/useGetShoppingItems'
-import usePostShoppingListItem from '@src/api/hooks/usePostShoppingListItem'
-import useGetTags from '@src/api/hooks/useGetTags'
+import useCustomQuery from '@src/api/hooks/useCustomQuery'
+import type {
+  ShoppingItemsResponse,
+  ShoppingList,
+  ShoppingListEntry,
+  TagsResponse,
+  UnitsResponse
+} from '@src/util/types'
+import useCustomMutation from '@src/api/hooks/useCustomMutation'
+import { queryClient } from '@src/api/queryClient'
 
 export type ShoppingListItemsSortingType = 'alphabetically' | 'timestamp'
 const defaultSorting: ShoppingListItemsSortingType = 'alphabetically'
@@ -55,34 +58,52 @@ const ShoppingListView = () => {
     setUndiscoveredCreatedAndUpdatedItems
   ] = useState<ModifiedItemRecord[]>([])
 
+  const shoppingListContainerRef = useRef<HTMLElement>(null)
+
   const { isSubscribed, setIsSubscribed } = usePushStatus(
     Number(params.shoppingListId)
   )
 
   const { data: shoppingListData, isLoading: isShoppingListDataLoading } =
-    useGetShoppingList({
-      shoppingListId: Number(params.shoppingListId)
+    useCustomQuery<ShoppingList>({
+      method: 'GET',
+      url: `/shopping/lists/${Number(params.shoppingListId)}`,
+      queryKey: [`shoppingList-${Number(params.shoppingListId)}`]
     })
 
-  const { data: units } = useGetUnits()
+  const { data: units } = useCustomQuery<UnitsResponse>({
+    method: 'GET',
+    queryKey: ['units'],
+    url: '/shopping/units/'
+  })
 
-  const { data: shoppingItems } = useGetShoppingItems()
+  const { data: shoppingItems } = useCustomQuery<ShoppingItemsResponse>({
+    method: 'GET',
+    url: '/shopping/items/',
+    queryKey: ['shoppingItems']
+  })
 
-  const { data: allTags } = useGetTags()
+  const { data: allTags } = useCustomQuery<TagsResponse>({
+    method: 'GET',
+    url: '/shopping/tags',
+    queryKey: ['tags']
+  })
 
   const {
     mutate: createItem,
     isError: isCreateItemError,
     status: createItemStatus,
     isPending: isCreateItemPending
-  } = usePostShoppingListItem({
-    shoppingListId: shoppingListData?.id,
-    onSuccess: () => setIsAdditionModalVisible(false)
+  } = useCustomMutation({
+    method: 'POST',
+    url: `/shopping/lists/${shoppingListData?.id}/`,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`shoppingList-${shoppingListData?.id}`]
+      })
+      setIsAdditionModalVisible(false)
+    }
   })
-
-  console.log(createItemStatus)
-
-  const shoppingListContainerRef = useRef<HTMLElement>(null)
 
   const handleDownloadPdf = async () => {
     if (!shoppingListData) return
@@ -245,7 +266,12 @@ const ShoppingListView = () => {
             : null
           const extraNotes = formData.get('extraNotes')?.toString()
 
-          createItem({ itemId, quantity, unit, extraNotes })
+          createItem({
+            item_id: itemId,
+            quantity: quantity,
+            unit: unit,
+            extra_notes: extraNotes
+          })
         }}
       >
         <p>Przedmiot zakupowy: </p>
@@ -263,7 +289,7 @@ const ShoppingListView = () => {
         <p>Jednostka:</p>
         <select name='unit'>
           <option value=''>-</option>
-          {units?.map((unit) => (
+          {units?.units.map((unit) => (
             <option value={unit.value}>{unit.label}</option>
           ))}
         </select>
@@ -355,7 +381,9 @@ const ShoppingListView = () => {
               className={commonStyles.shoppingListContainer}
               ref={shoppingListContainerRef}
             >
-              <div className={`${commonStyles.mainHeaderContainer} pdf-element`}>
+              <div
+                className={`${commonStyles.mainHeaderContainer} pdf-element`}
+              >
                 <header className={commonStyles.mainHeader}>
                   Tytuł: {shoppingListData?.title}
                 </header>

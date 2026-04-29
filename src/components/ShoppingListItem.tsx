@@ -1,8 +1,3 @@
-import useDeleteShoppingListItem from '@src/api/hooks/useDeleteShoppingListItem'
-import type { ShoppingListEntry } from '@src/api/hooks/useGetShoppingList'
-import useGetUnits from '@src/api/hooks/useGetUnits'
-import usePatchShoppingListItem from '@src/api/hooks/usePatchShoppingListItem'
-import usePutShoppingListItem from '@src/api/hooks/usePutShoppingListItem'
 import {
   acknowledgeChange,
   initChangesDB,
@@ -17,6 +12,10 @@ import { convertDateToReadable } from '@src/util/helpers'
 import type { ShoppingListItemsSortingType } from '@src/views/ShoppingListView'
 import { Pencil } from 'lucide-react'
 import { useState } from 'react'
+import useCustomMutation from '@src/api/hooks/useCustomMutation'
+import { queryClient } from '@src/api/queryClient'
+import useCustomQuery from '@src/api/hooks/useCustomQuery'
+import type { ShoppingListEntry, UnitsResponse } from '@src/util/types'
 
 type ShoppingListItemProps = {
   shoppingListId?: number
@@ -35,32 +34,47 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
     setIsDeleteItemConfirmationModalVisible
   ] = useState(false)
 
-  const { data: units } = useGetUnits()
+  const { data: units } = useCustomQuery<UnitsResponse>({
+    method: 'GET',
+    queryKey: ['units'],
+    url: '/shopping/units/'
+  })
 
   const {
     mutate: updateItem,
     isError: isUpdateItemError,
     isPending: isUpdateItemPending
-  } = usePutShoppingListItem({
-    shoppingListId: props.shoppingListId || -1,
-    entryId: props.shoppingListEntry.id || -1,
-    onSuccess: () => setIsEditionModalVisible(false)
+  } = useCustomMutation({
+    method: 'PUT',
+    url: `/shopping/lists/${props.shoppingListId}/entries/${props.shoppingListEntry.id}/`,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`shoppingList-${props.shoppingListId}`]
+      })
+      setIsEditionModalVisible(false)
+    }
   })
 
-  const { mutate: toggleCheck } = usePatchShoppingListItem({
-    entryId: props.shoppingListEntry.id || -1,
-    shoppingListId: props.shoppingListId || -1,
-    isChecked: !props.shoppingListEntry.is_checked
+  const { mutate: toggleCheck } = useCustomMutation({
+    method: 'PATCH',
+    url: `/shopping/lists/${props.shoppingListId}/entries/${props.shoppingListEntry.id}/`,
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [`shoppingList-${props.shoppingListId}`]
+      })
   })
 
   const {
     mutate: deleteItem,
     isPending: isDeleteItemPending,
     isError: isDeleteItemError
-  } = useDeleteShoppingListItem({
-    shoppingListId: props.shoppingListId || -1,
-    entryId: props.shoppingListEntry.id || -1,
+  } = useCustomMutation({
+    method: 'DELETE',
+    url: `/shopping/lists/${props.shoppingListId}/entries/${props.shoppingListEntry.id}/`,
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`shoppingList-${props.shoppingListId}`]
+      })
       setIsDeleteItemConfirmationModalVisible(false)
       setIsEditionModalVisible(false)
     }
@@ -115,7 +129,7 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
             : null
           const extraNotes = formData.get('extraNotes')?.toString()
 
-          updateItem({ quantity, unit, extraNotes })
+          updateItem({ quantity, unit, extra_notes: extraNotes })
         }}
       >
         <p>Ilość:</p>
@@ -130,7 +144,7 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
         <p>Jednostka:</p>
         <select defaultValue={props.shoppingListEntry.unit || ''} name='unit'>
           <option value=''>-</option>
-          {units?.map((unit) => (
+          {units?.units.map((unit) => (
             <option value={unit.value}>{unit.label}</option>
           ))}
         </select>
@@ -237,7 +251,10 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
               type='checkbox'
               checked={props.shoppingListEntry.is_checked}
               onClick={() => {
-                if (props.modificationType !== 'deleted') toggleCheck()
+                if (props.modificationType !== 'deleted')
+                  toggleCheck({
+                    is_checked: !props.shoppingListEntry.is_checked
+                  })
               }}
             />
           </div>
@@ -258,7 +275,7 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
         isModalVisible={isDeleteItemConfirmationModalVisible}
         setIsModalVisible={setIsDeleteItemConfirmationModalVisible}
         text='Czy na pewno usunąć ten przedmiot zakupowy z tej listy?'
-        onSubmit={deleteItem}
+        onSubmit={() => deleteItem({})}
         isLoading={isDeleteItemPending}
         error={isDeleteItemError ? 'Wystąpił błąd' : undefined}
         dontCloseOnSubmit
