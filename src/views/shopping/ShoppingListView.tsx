@@ -7,26 +7,14 @@ import commonStyles from '@src/commonStyles/ShoppingListViewCommonStyles.module.
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import {
-  BellMinus,
-  BellPlus,
   Download,
   Pencil,
   PencilOff,
   Plus
 } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
-import {
-  subscribeToListNotifications,
-  unsubscribeFromListNotifications
-} from '@src/api/pushSubscription'
-import { usePushStatus } from '@src/api/hooks/usePushStatus'
-import {
-  initChangesDB,
-  retrieveCreatedAndUpdatedItems,
-  type ModifiedItemRecord
-} from '@src/api/indexedDb'
 import Modal from '@src/components/common/Modal'
 import ErrorSpan from '@src/components/common/ErrorSpan'
 import useCustomQuery from '@src/api/hooks/useCustomQuery'
@@ -53,16 +41,8 @@ const ShoppingListView = () => {
   const [sorting, setSorting] =
     useState<ShoppingListItemsSortingType>(defaultSorting)
   const [tagIdToFilterBy, setTagIdToFilterBy] = useState<number | null>(null)
-  const [
-    undiscoveredCreatedAndUpdatedItems,
-    setUndiscoveredCreatedAndUpdatedItems
-  ] = useState<ModifiedItemRecord[]>([])
 
   const shoppingListContainerRef = useRef<HTMLElement>(null)
-
-  const { isSubscribed, setIsSubscribed } = usePushStatus(
-    Number(params.shoppingListId)
-  )
 
   const { data: shoppingListData, isLoading: isShoppingListDataLoading } =
     useCustomQuery<ShoppingList>({
@@ -231,23 +211,6 @@ const ShoppingListView = () => {
     setIsDocxDownloading(false)
   }
 
-  const loadChangesFromIDB = async () => {
-    const db = await initChangesDB()
-    const createdAndUpdatedItems = await retrieveCreatedAndUpdatedItems(db)
-    setUndiscoveredCreatedAndUpdatedItems(createdAndUpdatedItems)
-  }
-
-  const getModificationType = (listItemId: number) => {
-    return undiscoveredCreatedAndUpdatedItems.find(
-      (item) => item.id === listItemId
-    )?.modificationType
-  }
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadChangesFromIDB()
-  }, [])
-
   const modalBody = (
     <div className={commonStyles.additionModalBody}>
       <hr />
@@ -331,36 +294,6 @@ const ShoppingListView = () => {
           <Spinner />
         ) : (
           <main>
-            <ButtonWithIcon
-              icon={isSubscribed ? BellMinus : BellPlus}
-              text={
-                isSubscribed ? (
-                  <>
-                    <b>Wyłącz</b> powiadomienia dla tej listy
-                  </>
-                ) : (
-                  <>
-                    <b>Włącz</b> powiadomienia dla tej listy
-                  </>
-                )
-              }
-              variant='primary'
-              onClick={() => {
-                if (shoppingListData?.id)
-                  if (isSubscribed)
-                    unsubscribeFromListNotifications(shoppingListData.id).then(
-                      () => setIsSubscribed(false)
-                    )
-                  else
-                    subscribeToListNotifications(shoppingListData.id).then(
-                      () => {
-                        setIsSubscribed(true)
-                      }
-                    )
-              }}
-            />
-            <br />
-            <br />
             <ButtonWithIcon
               icon={isEditionMode ? PencilOff : Pencil}
               text={
@@ -475,8 +408,6 @@ const ShoppingListView = () => {
                           tagsNames={entry.tags.map((tag) => tag.name)}
                           shoppingListEntry={entry}
                           shoppingListId={shoppingListData.id}
-                          modificationType={getModificationType(entry.id || -1)}
-                          loadChangesFromIdb={loadChangesFromIDB}
                           isEditionMode={isEditionMode}
                           sorting={sorting}
                         />

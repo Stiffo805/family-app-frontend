@@ -1,8 +1,3 @@
-import {
-  acknowledgeChange,
-  initChangesDB,
-  type ModificationType
-} from '@src/api/indexedDb'
 import ButtonWithIcon from '@src/components/common/ButtonWithIcon'
 import ConfirmationModal from '@src/components/common/ConfirmationModal'
 import ErrorSpan from '@src/components/common/ErrorSpan'
@@ -21,8 +16,6 @@ type ShoppingListItemProps = {
   shoppingListId?: number
   shoppingListEntry: ShoppingListEntry
   tagsNames: string[]
-  modificationType?: ModificationType
-  loadChangesFromIdb: () => void
   isEditionMode?: boolean
   sorting?: ShoppingListItemsSortingType
 }
@@ -79,38 +72,6 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
       setIsEditionModalVisible(false)
     }
   })
-
-  const getBackgroundColor = () => {
-    if (props.modificationType === 'created')
-      return 'hsla(74 100% 67.6% / 0.46)'
-    else if (props.modificationType === 'updated')
-      return 'hsla(53 100% 77% / 0.46)'
-    else if (props.modificationType === 'deleted')
-      return 'hsla(11 100% 77% / 0.46)'
-    else return undefined
-  }
-
-  const getModificationTypeLabel = () => {
-    if (props.modificationType === 'created') {
-      return 'Dodane'
-    }
-    if (props.modificationType === 'updated') {
-      return 'Zaktualizowane'
-    }
-    if (props.modificationType === 'deleted') {
-      return 'Usunięte'
-    }
-  }
-
-  const acknowledge = async () => {
-    const db = await initChangesDB()
-    await acknowledgeChange(
-      db,
-      props.shoppingListEntry.id || -1,
-      props.modificationType === 'deleted'
-    )
-    props.loadChangesFromIdb()
-  }
 
   const modalBody = (
     <div className={commonStyles.editionModalBody}>
@@ -182,10 +143,6 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
     <>
       <li
         className={`${commonStyles.shoppingListItem} ${props.shoppingListEntry.is_checked ? commonStyles.checkedListItem : ''}`}
-        style={{
-          backgroundColor: getBackgroundColor()
-        }}
-        onClick={acknowledge}
       >
         <div className={commonStyles.mainEntryContainer}>
           <div className={commonStyles.textContentContainer}>
@@ -207,14 +164,6 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
                 ? props.shoppingListEntry.extra_notes
                 : 'Brak uwag'}
             </span>
-            {props.modificationType && (
-              <>
-                <br />
-                <span className={commonStyles.modificationTypeLabel}>
-                  {getModificationTypeLabel()}
-                </span>
-              </>
-            )}
             {props.sorting === 'timestamp' && (
               <>
                 <br />
@@ -250,12 +199,11 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
             <input
               type='checkbox'
               checked={props.shoppingListEntry.is_checked}
-              onClick={() => {
-                if (props.modificationType !== 'deleted')
-                  toggleCheck({
-                    is_checked: !props.shoppingListEntry.is_checked
-                  })
-              }}
+              onClick={() =>
+                toggleCheck({
+                  is_checked: !props.shoppingListEntry.is_checked
+                })
+              }
             />
           </div>
         </div>
