@@ -6,27 +6,20 @@ import Spinner from '@src/components/common/Spinner'
 import commonStyles from '@src/commonStyles/ShoppingListViewCommonStyles.module.css'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
-import {
-  Download,
-  Pencil,
-  PencilOff,
-  Plus
-} from 'lucide-react'
+import { Download, Pencil, PencilOff, Plus } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
 import Modal from '@src/components/common/Modal'
 import ErrorSpan from '@src/components/common/ErrorSpan'
-import useCustomQuery from '@src/api/hooks/useCustomQuery'
-import type {
-  ShoppingItemsResponse,
-  ShoppingList,
-  ShoppingListEntry,
-  TagsResponse,
-  UnitsResponse
-} from '@src/util/types'
-import useCustomMutation from '@src/api/hooks/useCustomMutation'
-import { queryClient } from '@src/api/queryClient'
+import type { ShoppingListEntry } from '@src/util/types'
+import {
+  useCreateShoppingListItem,
+  useGetAllShoppingItems,
+  useGetAllTags,
+  useGetShoppingList,
+  useGetAllUnits
+} from '@src/api/shopping'
 
 export type ShoppingListItemsSortingType = 'alphabetically' | 'timestamp'
 const defaultSorting: ShoppingListItemsSortingType = 'alphabetically'
@@ -45,42 +38,24 @@ const ShoppingListView = () => {
   const shoppingListContainerRef = useRef<HTMLElement>(null)
 
   const { data: shoppingListData, isLoading: isShoppingListDataLoading } =
-    useCustomQuery<ShoppingList>({
-      method: 'GET',
-      url: `/shopping/lists/${Number(params.shoppingListId)}`,
-      queryKey: [`shoppingList-${Number(params.shoppingListId)}`]
+    useGetShoppingList({
+      shoppingListId: Number(params.shoppingListId)
     })
 
-  const { data: units } = useCustomQuery<UnitsResponse>({
-    method: 'GET',
-    queryKey: ['units'],
-    url: '/shopping/units/'
-  })
+  const { data: units } = useGetAllUnits()
 
-  const { data: shoppingItems } = useCustomQuery<ShoppingItemsResponse>({
-    method: 'GET',
-    url: '/shopping/items/',
-    queryKey: ['shoppingItems']
-  })
+  const { data: shoppingItems } = useGetAllShoppingItems()
 
-  const { data: allTags } = useCustomQuery<TagsResponse>({
-    method: 'GET',
-    url: '/shopping/tags',
-    queryKey: ['tags']
-  })
+  const { data: allTags } = useGetAllTags()
 
   const {
     mutate: createItem,
     isError: isCreateItemError,
     status: createItemStatus,
     isPending: isCreateItemPending
-  } = useCustomMutation({
-    method: 'POST',
-    url: `/shopping/lists/${shoppingListData?.id}/`,
+  } = useCreateShoppingListItem({
+    shoppingListId: shoppingListData?.id,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [`shoppingList-${shoppingListData?.id}`]
-      })
       setIsAdditionModalVisible(false)
     }
   })

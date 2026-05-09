@@ -1,5 +1,4 @@
-import useCustomMutation from '@src/api/hooks/useCustomMutation'
-import { queryClient } from '@src/api/queryClient'
+import { usePatchLackingShoppingListItem } from '@src/api/shopping'
 import commonStyles from '@src/commonStyles/ShoppingListItemCommonStyles.module.css'
 import styles from '@src/components/shopping/LackingItemsShoppingListItem.module.css'
 import { convertDateToReadable } from '@src/util/helpers'
@@ -16,13 +15,8 @@ type ShoppingListItemProps = {
 }
 
 const LackingItemsShoppingListItem = (props: ShoppingListItemProps) => {
-  const { mutate: setChecked } = useCustomMutation({
-    method: 'PATCH',
-    url: `/shopping/items/lacking/${props.lackingItemsShoppingListEntry.id}/`,
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: [`lackingItems`]
-      })
+  const { mutate: setChecked } = usePatchLackingShoppingListItem({
+    entryId: props.lackingItemsShoppingListEntry.id
   })
 
   return (

@@ -20,16 +20,16 @@ import LackingItemsShoppingListItem from '@src/components/shopping/LackingItemsS
 import Modal from '@src/components/common/Modal'
 import ConfirmationModal from '@src/components/common/ConfirmationModal'
 import { useNavigate } from 'react-router'
-import useCustomQuery from '@src/api/hooks/useCustomQuery'
 import type {
-  LackingShoppingListItemsList,
   LackingShoppingListItemsListEntry,
-  MoveLackingItemsOperationType,
-  ShoppingListsInfosList,
-  TagsResponse
+  MoveLackingItemsOperationType
 } from '@src/util/types'
-import useCustomMutation from '@src/api/hooks/useCustomMutation'
-import { queryClient } from '@src/api/queryClient'
+import {
+  useGetAllTags,
+  useGetLackingShoppingListItems,
+  useGetAllShoppingLists,
+  useMoveLackingItems
+} from '@src/api/shopping'
 
 const defaultSorting: ShoppingListItemsSortingType = 'alphabetically'
 const LackingItemsShoppingListView = () => {
@@ -60,39 +60,18 @@ const LackingItemsShoppingListView = () => {
   const {
     data: lackingShoppingListItems,
     isLoading: isLackingShoppingListItemsDataLoading
-  } = useCustomQuery<LackingShoppingListItemsList>({
-    method: 'GET',
-    url: '/shopping/items/lacking/',
-    queryKey: ['lackingItems']
-  })
+  } = useGetLackingShoppingListItems()
 
   const {
     mutate: moveLackingItems,
     isPending: isMoveLackingItemsMutationPending
-  } = useCustomMutation({
-    method: 'POST',
-    url: `/shopping/items/lacking/move/${targetShoppingListId}/`,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['lackingItems']
-      })
-      queryClient.invalidateQueries({
-        queryKey: [`shoppingList-${targetShoppingListId}`]
-      })
-    }
+  } = useMoveLackingItems({
+    targetShoppingListId
   })
 
-  const { data: allTags } = useCustomQuery<TagsResponse>({
-    method: 'GET',
-    url: '/shopping/tags',
-    queryKey: ['tags']
-  })
+  const { data: allTags } = useGetAllTags()
 
-  const { data: shoppingLists } = useCustomQuery<ShoppingListsInfosList>({
-    method: 'GET',
-    url: '/shopping/lists',
-    queryKey: ['shoppingLists']
-  })
+  const { data: shoppingLists } = useGetAllShoppingLists()
 
   const toggleCheckItem = (entry: LackingShoppingListItemsListEntry) => {
     if (checkedItems.map((item) => item.id).includes(entry.id)) {

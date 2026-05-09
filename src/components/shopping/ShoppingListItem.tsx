@@ -7,10 +7,13 @@ import { convertDateToReadable } from '@src/util/helpers'
 import type { ShoppingListItemsSortingType } from '@src/views/shopping/ShoppingListView'
 import { Pencil } from 'lucide-react'
 import { useState } from 'react'
-import useCustomMutation from '@src/api/hooks/useCustomMutation'
-import { queryClient } from '@src/api/queryClient'
-import useCustomQuery from '@src/api/hooks/useCustomQuery'
-import type { ShoppingListEntry, UnitsResponse } from '@src/util/types'
+import type { ShoppingListEntry } from '@src/util/types'
+import {
+  useCheckShoppingListItem,
+  useDeleteShoppingListItem,
+  useGetAllUnits,
+  usePutShoppingListItem
+} from '@src/api/shopping'
 
 type ShoppingListItemProps = {
   shoppingListId?: number
@@ -27,47 +30,33 @@ const ShoppingListItem = (props: ShoppingListItemProps) => {
     setIsDeleteItemConfirmationModalVisible
   ] = useState(false)
 
-  const { data: units } = useCustomQuery<UnitsResponse>({
-    method: 'GET',
-    queryKey: ['units'],
-    url: '/shopping/units/'
-  })
+  const { data: units } = useGetAllUnits()
 
   const {
     mutate: updateItem,
     isError: isUpdateItemError,
     isPending: isUpdateItemPending
-  } = useCustomMutation({
-    method: 'PUT',
-    url: `/shopping/lists/${props.shoppingListId}/entries/${props.shoppingListEntry.id}/`,
+  } = usePutShoppingListItem({
+    shoppingListId: props.shoppingListId,
+    shoppingListItemsEntryId: props.shoppingListEntry.id,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [`shoppingList-${props.shoppingListId}`]
-      })
       setIsEditionModalVisible(false)
     }
   })
 
-  const { mutate: toggleCheck } = useCustomMutation({
-    method: 'PATCH',
-    url: `/shopping/lists/${props.shoppingListId}/entries/${props.shoppingListEntry.id}/`,
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: [`shoppingList-${props.shoppingListId}`]
-      })
+  const { mutate: toggleCheck } = useCheckShoppingListItem({
+    shoppingListId: props.shoppingListId,
+    shoppingListItemsEntryId: props.shoppingListEntry.id
   })
 
   const {
     mutate: deleteItem,
     isPending: isDeleteItemPending,
     isError: isDeleteItemError
-  } = useCustomMutation({
-    method: 'DELETE',
-    url: `/shopping/lists/${props.shoppingListId}/entries/${props.shoppingListEntry.id}/`,
+  } = useDeleteShoppingListItem({
+    shoppingListId: props.shoppingListId,
+    shoppingListItemsEntryId: props.shoppingListEntry.id,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [`shoppingList-${props.shoppingListId}`]
-      })
       setIsDeleteItemConfirmationModalVisible(false)
       setIsEditionModalVisible(false)
     }
