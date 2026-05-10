@@ -60,7 +60,8 @@ const useCustomMutation = (props: UseCustomMutationProps) => {
     mutate: mutation.mutate,
     isPending: mutation.isPending,
     isError: mutation.isError,
-    status: currentHttpStatus
+    status: currentHttpStatus,
+    reset: mutation.reset
   }
 }
 

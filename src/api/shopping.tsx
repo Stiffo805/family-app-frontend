@@ -17,6 +17,18 @@ export const useGetAllTags = () =>
     queryKey: ['tags']
   })
 
+export const useCreateTag = (args: { onSuccess: () => void }) =>
+  useCustomMutation({
+    method: 'POST',
+    url: '/shopping/tags/',
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tags']
+      })
+      args.onSuccess()
+    }
+  })
+
 export const useGetAllUnits = () =>
   useCustomQuery<UnitsResponse>({
     method: 'GET',
@@ -45,7 +57,7 @@ export const useGetAllShoppingItems = () =>
     queryKey: ['shoppingItems']
   })
 
-export const useCreateShoppingListItem = (args: {
+export const useAddShoppingListItemToList = (args: {
   shoppingListId: number | undefined
   onSuccess: () => void
 }) =>
@@ -55,6 +67,18 @@ export const useCreateShoppingListItem = (args: {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [`shoppingList-${args.shoppingListId}`]
+      })
+      args.onSuccess()
+    }
+  })
+
+export const usePostShoppingListItem = (args: { onSuccess: () => void }) =>
+  useCustomMutation({
+    method: 'POST',
+    url: '/shopping/items/',
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['shoppingItems']
       })
       args.onSuccess()
     }
@@ -110,6 +134,50 @@ export const useGetLackingShoppingListItems = () =>
     method: 'GET',
     url: '/shopping/items/lacking/',
     queryKey: ['lackingItems']
+  })
+
+export const useCreateLackingShoppingListItem = (args: {
+  onSuccess: () => void
+}) =>
+  useCustomMutation({
+    method: 'POST',
+    url: '/shopping/items/lacking/',
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['lackingItems']
+      })
+      args.onSuccess()
+    }
+  })
+
+export const usePutLackingShoppingListItem = (args: {
+  lackingItemId: number | undefined
+  onSuccess: () => void
+}) =>
+  useCustomMutation({
+    method: 'PUT',
+    url: `/shopping/items/lacking/${args.lackingItemId}/`,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['lackingItems']
+      })
+      args.onSuccess()
+    }
+  })
+
+export const useDeleteLackingShoppingListItem = (args: {
+  lackingItemId: number | undefined
+  onSuccess: () => void
+}) =>
+  useCustomMutation({
+    method: 'DELETE',
+    url: `/shopping/items/lacking/${args.lackingItemId}/`,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['lackingItems']
+      })
+      args.onSuccess()
+    }
   })
 
 export const useMoveLackingItems = (args: { targetShoppingListId: number }) =>

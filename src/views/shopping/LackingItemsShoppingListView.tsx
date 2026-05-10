@@ -5,7 +5,8 @@ import {
   CircleCheck,
   Download,
   Pencil,
-  PencilOff
+  PencilOff,
+  Plus
 } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import commonStyles from '@src/commonStyles/ShoppingListViewCommonStyles.module.css'
@@ -17,7 +18,7 @@ import LogoutButton from '@src/components/common/LogoutButton'
 import GoBackArrow from '@src/components/common/GoBackArrow'
 import Spinner from '@src/components/common/Spinner'
 import LackingItemsShoppingListItem from '@src/components/shopping/LackingItemsShoppingListItem'
-import Modal from '@src/components/common/Modal'
+import Modal, { type ModalFooterConfig } from '@src/components/common/Modal'
 import ConfirmationModal from '@src/components/common/ConfirmationModal'
 import { useNavigate } from 'react-router'
 import type {
@@ -30,6 +31,9 @@ import {
   useGetAllShoppingLists,
   useMoveLackingItems
 } from '@src/api/shopping'
+import AddItemToShoppingListModal from '@src/components/shopping/modals/AddItemToShoppingListModal'
+import CreateNewShoppingItemModal from '@src/components/shopping/modals/CreateNewShoppingItemModal'
+import CreateNewTagModal from '@src/components/shopping/modals/CreateNewTagModal'
 
 const defaultSorting: ShoppingListItemsSortingType = 'alphabetically'
 const LackingItemsShoppingListView = () => {
@@ -54,6 +58,15 @@ const LackingItemsShoppingListView = () => {
     useState<MoveLackingItemsOperationType>('copy')
   const [exportError, setExportError] = useState('')
   const [isGlobalSelected, setIsGlobalSelected] = useState(false)
+
+  const [isAdditionModalVisible, setIsAdditionModalVisible] = useState(false)
+  const [
+    isNewProductCreationModalVisible,
+    setIsNewProductCreationModalVisible
+  ] = useState(false)
+
+  const [isNewTagCreationModalVisible, setIsNewTagCreationModalVisible] =
+    useState(false)
 
   const shoppingListContainerRef = useRef<HTMLElement>(null)
 
@@ -267,11 +280,12 @@ const LackingItemsShoppingListView = () => {
     </div>
   )
 
-  const exportModalFooter = (
-    <div className={styles.exportModalFooterContainer}>
-      <button onClick={() => setIsExportModalVisible(false)}>Anuluj</button>
-      <button
-        onClick={() => {
+  const exportModalFooterConfig: ModalFooterConfig = {
+    buttons: [
+      {
+        label: 'Potwierdź',
+        type: 'button',
+        onClick: () => {
           if (targetShoppingListId === -1) {
             setExportError('Wybierz docelową listę zakupów')
             return
@@ -282,12 +296,16 @@ const LackingItemsShoppingListView = () => {
           })
           setIsExportModalVisible(false)
           setIsExportConfirmationModalVisible(true)
-        }}
-      >
-        Potwierdź
-      </button>
-    </div>
-  )
+        }
+      },
+      {
+        label: 'Anuluj',
+        type: 'button',
+        onClick: () => setIsExportModalVisible(false),
+        backgroundColor: 'var(--rose2)'
+      }
+    ]
+  }
 
   return (
     <>
@@ -372,14 +390,30 @@ const LackingItemsShoppingListView = () => {
                   }}
                 >
                   <option value='all'>Wszystkie</option>
-                  {allTags?.items.map((item) => (
-                    <option value={item.id}>{item.name}</option>
-                  ))}
+                  {allTags?.items
+                    .sort((tag1, tag2) => tag1.name.localeCompare(tag2.name))
+                    .map((item) => (
+                      <option value={item.id}>{item.name}</option>
+                    ))}
                 </select>
               </section>
               <hr className='pdf-element' />
               <section>
                 <header className='pdf-element'>Przedmioty zakupowe</header>
+                {isEditionMode && (
+                  <>
+                    <ButtonWithIcon
+                      icon={Plus}
+                      text='Dodaj przedmiot zakupowy'
+                      fontSize='13px'
+                      iconSize={13}
+                      variant='primary'
+                      onClick={() => setIsAdditionModalVisible(true)}
+                    />
+                    <br />
+                    <br />
+                  </>
+                )}
                 {isEditionMode && (
                   <>
                     <div className={styles.shoppingListItemsBar}>
@@ -412,6 +446,7 @@ const LackingItemsShoppingListView = () => {
                         fontSize='clamp(14px, 2vw, 20px)'
                         padding={5}
                         iconSize={16}
+                        disabled={!checkedItems.length}
                       />
                     </div>
                     <hr />
@@ -458,7 +493,29 @@ const LackingItemsShoppingListView = () => {
         error={exportError !== '' ? exportError : undefined}
         isLoading={isMoveLackingItemsMutationPending}
         body={exportModalBody}
-        footer={exportModalFooter}
+        footerConfig={exportModalFooterConfig}
+      />
+      <AddItemToShoppingListModal
+        isModalVisible={
+          isAdditionModalVisible &&
+          !isNewProductCreationModalVisible &&
+          !isNewTagCreationModalVisible
+        }
+        setIsModalVisible={setIsAdditionModalVisible}
+        setIsNewProductCreationModalVisible={
+          setIsNewProductCreationModalVisible
+        }
+      />
+      <CreateNewShoppingItemModal
+        isModalVisible={
+          isNewProductCreationModalVisible && !isNewTagCreationModalVisible
+        }
+        setIsModalVisible={setIsNewProductCreationModalVisible}
+        setIsNewTagCreationModalVisible={setIsNewTagCreationModalVisible}
+      />
+      <CreateNewTagModal
+        isModalVisible={isNewTagCreationModalVisible}
+        setIsModalVisible={setIsNewTagCreationModalVisible}
       />
       <ConfirmationModal
         isModalVisible={isExportConfirmationModalVisible}

@@ -10,6 +10,8 @@
 }
 
 .modalContainer {
+  display: flex;
+  flex-direction: column;
   position: fixed;
   top: 10vh;
   left: calc(50% - 180px);
@@ -20,6 +22,15 @@
   padding: 20px;
   background-color: var(--stone2);
   z-index: 110;
+
+  .footer {
+    padding-top: 15px;
+    margin-top: auto;
+    display: flex;
+    justify-content: end;
+    width: 90%;
+    gap: 15px;
+  }
 
   .footer button {
     background-color: var(--stone3);

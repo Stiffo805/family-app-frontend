@@ -10,16 +10,11 @@ import { Download, Pencil, PencilOff, Plus } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
-import Modal from '@src/components/common/Modal'
-import ErrorSpan from '@src/components/common/ErrorSpan'
 import type { ShoppingListEntry } from '@src/util/types'
-import {
-  useCreateShoppingListItem,
-  useGetAllShoppingItems,
-  useGetAllTags,
-  useGetShoppingList,
-  useGetAllUnits
-} from '@src/api/shopping'
+import { useGetAllTags, useGetShoppingList } from '@src/api/shopping'
+import AddItemToShoppingListModal from '@src/components/shopping/modals/AddItemToShoppingListModal'
+import CreateNewShoppingItemModal from '@src/components/shopping/modals/CreateNewShoppingItemModal'
+import CreateNewTagModal from '@src/components/shopping/modals/CreateNewTagModal'
 
 export type ShoppingListItemsSortingType = 'alphabetically' | 'timestamp'
 const defaultSorting: ShoppingListItemsSortingType = 'alphabetically'
@@ -35,6 +30,14 @@ const ShoppingListView = () => {
     useState<ShoppingListItemsSortingType>(defaultSorting)
   const [tagIdToFilterBy, setTagIdToFilterBy] = useState<number | null>(null)
 
+  const [
+    isNewProductCreationModalVisible,
+    setIsNewProductCreationModalVisible
+  ] = useState(false)
+
+  const [isNewTagCreationModalVisible, setIsNewTagCreationModalVisible] =
+    useState(false)
+
   const shoppingListContainerRef = useRef<HTMLElement>(null)
 
   const { data: shoppingListData, isLoading: isShoppingListDataLoading } =
@@ -42,23 +45,7 @@ const ShoppingListView = () => {
       shoppingListId: Number(params.shoppingListId)
     })
 
-  const { data: units } = useGetAllUnits()
-
-  const { data: shoppingItems } = useGetAllShoppingItems()
-
   const { data: allTags } = useGetAllTags()
-
-  const {
-    mutate: createItem,
-    isError: isCreateItemError,
-    status: createItemStatus,
-    isPending: isCreateItemPending
-  } = useCreateShoppingListItem({
-    shoppingListId: shoppingListData?.id,
-    onSuccess: () => {
-      setIsAdditionModalVisible(false)
-    }
-  })
 
   const handleDownloadPdf = async () => {
     if (!shoppingListData) return
@@ -186,70 +173,6 @@ const ShoppingListView = () => {
     setIsDocxDownloading(false)
   }
 
-  const modalBody = (
-    <div className={commonStyles.additionModalBody}>
-      <hr />
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-
-          const formData = new FormData(e.currentTarget)
-
-          const itemId = Number(formData.get('itemId'))
-          const quantity = Number(formData.get('quantity'))
-            ? Number(formData.get('quantity'))
-            : null
-          const unit = formData.get('unit')
-            ? formData.get('unit')?.toString()
-            : null
-          const extraNotes = formData.get('extraNotes')?.toString()
-
-          createItem({
-            item_id: itemId,
-            quantity: quantity,
-            unit: unit,
-            extra_notes: extraNotes
-          })
-        }}
-      >
-        <p>Przedmiot zakupowy: </p>
-        <select name='itemId'>
-          {shoppingItems?.all_items.map((item) => (
-            <option value={item.id}>{item.name}</option>
-          ))}
-        </select>
-        <br />
-        {isCreateItemError && createItemStatus === 409 && (
-          <ErrorSpan errorText='Na tej liście występuje już ten przedmiot zakupowy' />
-        )}
-        <p>Ilość:</p>
-        <input type='number' min={0} max={999999} step={0.01} name='quantity' />
-        <p>Jednostka:</p>
-        <select name='unit'>
-          <option value=''>-</option>
-          {units?.units.map((unit) => (
-            <option value={unit.value}>{unit.label}</option>
-          ))}
-        </select>
-        <p>Dodatkowe uwagi:</p>
-        <input type='text' name='extraNotes' />
-        <br />
-        {isCreateItemError && createItemStatus !== 409 && (
-          <ErrorSpan errorText='Wystąpił błąd' />
-        )}
-        <div className={commonStyles.modalButtonsContainer}>
-          <button type='submit'>Zapisz</button>
-          <button
-            type='button'
-            onClick={() => setIsAdditionModalVisible(false)}
-          >
-            Anuluj
-          </button>
-        </div>
-      </form>
-    </div>
-  )
-
   const sortingCompareFunction = useMemo(() => {
     if (sorting === 'alphabetically')
       return (entry1: ShoppingListEntry, entry2: ShoppingListEntry) =>
@@ -342,9 +265,11 @@ const ShoppingListView = () => {
                   }}
                 >
                   <option value='all'>Wszystkie</option>
-                  {allTags?.items.map((item) => (
-                    <option value={item.id}>{item.name}</option>
-                  ))}
+                  {allTags?.items
+                    .sort((tag1, tag2) => tag1.name.localeCompare(tag2.name))
+                    .map((item) => (
+                      <option value={item.id}>{item.name}</option>
+                    ))}
                 </select>
               </section>
               <hr className='pdf-element' />
@@ -395,12 +320,28 @@ const ShoppingListView = () => {
           </main>
         )}
       </div>
-      <Modal
-        isModalVisible={isAdditionModalVisible}
+      <AddItemToShoppingListModal
+        isModalVisible={
+          isAdditionModalVisible &&
+          !isNewProductCreationModalVisible &&
+          !isNewTagCreationModalVisible
+        }
         setIsModalVisible={setIsAdditionModalVisible}
-        title='Dodawanie przedmiotu zakupowego do listy'
-        body={modalBody}
-        isLoading={isCreateItemPending}
+        shoppingListId={Number(params.shoppingListId)}
+        setIsNewProductCreationModalVisible={
+          setIsNewProductCreationModalVisible
+        }
+      />
+      <CreateNewShoppingItemModal
+        isModalVisible={
+          isNewProductCreationModalVisible && !isNewTagCreationModalVisible
+        }
+        setIsModalVisible={setIsNewProductCreationModalVisible}
+        setIsNewTagCreationModalVisible={setIsNewTagCreationModalVisible}
+      />
+      <CreateNewTagModal
+        isModalVisible={isNewTagCreationModalVisible}
+        setIsModalVisible={setIsNewTagCreationModalVisible}
       />
     </>
   )
