@@ -1,5 +1,5 @@
-import ButtonWithIcon from '@src/components/ButtonWithIcon'
-import LogoutButton from '@src/components/LogoutButton'
+import ButtonWithIcon from '@src/components/common/ButtonWithIcon'
+import LogoutButton from '@src/components/common/LogoutButton'
 import styles from '@src/views/IndexView.module.css'
 import { ArrowRight } from 'lucide-react'
 import { useNavigate } from 'react-router'

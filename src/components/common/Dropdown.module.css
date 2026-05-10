@@ -1,0 +1,30 @@
+.dropdownButtonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+  padding-left: 10px;
+  background-color: var(--white1);
+  position: relative;
+  width: 100%;
+
+  .popover {
+    position: absolute;
+    min-width: 200px;
+    max-height: 160px;
+    overflow-y: auto;
+    top: 40px;
+    left: 0;
+    z-index: 120;
+
+    .dropdownItem {
+      background-color: var(--white2);
+      padding: 2px;
+      padding-left: 5px;
+      font-size: 20px;
+      width: 100%;
+      z-index: 120;
+      cursor: pointer;
+    }
+  }
+}

@@ -82,11 +82,49 @@
     padding-bottom: 8px;
   }
 
+  .shoppingItemsDropdown {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .plusIcon {
+      background-color: var(--white2);
+      border-radius: 100%;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--white3);
+      }
+    }
+  }
+
+  .tagsDropdownContainer {
+    width: 90%;
+  }
+
+  .checkedTagContainer {
+    width: 90%;
+
+    .checkedTagBadge {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 5px;
+      margin: 10px 0;
+      background-color: var(--white3);
+
+      .tagX {
+        cursor: pointer;
+      }
+    }
+  }
+
   input, select {
     background-color: var(--white1);
     padding: 5px;
     width: 90%;
     border: none;
+    font-size: 18px;
   }
 
   .modalButtonsContainer {
@@ -99,5 +137,15 @@
     & > button {
       padding: 5px 10px;
     }
+  }
+}
+
+.newProductCreationModalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  & > button:last-child {
+    background-color: var(--rose2);
   }
 }

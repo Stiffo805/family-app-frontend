@@ -1,0 +1,69 @@
+.modalBody {
+  padding-top: 15px;
+
+  p {
+    font-size: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  input,
+  select {
+    background-color: var(--white1);
+    padding: 5px;
+    width: 90%;
+    border: none;
+    font-size: 18px;
+  }
+
+  .shoppingItemsDropdown {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .plusIcon {
+      background-color: var(--white2);
+      border-radius: 100%;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--white3);
+      }
+    }
+  }
+
+  .tagsDropdownContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 90%;
+
+    .plusIcon {
+      background-color: var(--white2);
+      border-radius: 100%;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--white3);
+      }
+    }
+  }
+
+  .checkedTagContainer {
+    width: 90%;
+
+    .checkedTagBadge {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 5px;
+      margin: 10px 0;
+      background-color: var(--white3);
+
+      .tagX {
+        cursor: pointer;
+      }
+    }
+  }
+}

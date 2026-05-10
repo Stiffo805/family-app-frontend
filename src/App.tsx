@@ -1,17 +1,17 @@
-import RecipeView from '@src/views/RecipeView'
+import RecipeView from '@src/views/recipes/RecipeView'
 import styles from '@src/App.module.css'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from '@src/api/queryClient'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router'
-import RecipesView from '@src/views/RecipesView'
+import RecipesView from '@src/views/recipes/RecipesView'
 import IndexView from '@src/views/IndexView'
-import ShoppingListsView from '@src/views/ShoppingListsView'
-import ShoppingListView from '@src/views/ShoppingListView'
+import ShoppingListsView from '@src/views/shopping/ShoppingListsView'
+import ShoppingListView from '@src/views/shopping/ShoppingListView'
 import LoginView from '@src/views/LoginView'
 import ProtectedRoutes from '@src/components/ProtectedRoutes'
 import IsAliveProvider from '@src/components/IsAliveProvider'
-import ActivitiesView from '@src/views/ActivitiesView'
-import LackingItemsShoppingListView from '@src/views/LackingItemsShoppingListView'
+import ActivitiesView from '@src/views/activities/ActivitiesView'
+import LackingItemsShoppingListView from '@src/views/shopping/LackingItemsShoppingListView'
 
 const router = createBrowserRouter(
   [
