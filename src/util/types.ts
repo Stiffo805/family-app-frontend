@@ -78,3 +78,34 @@ export type LackingShoppingListItemsList = {
 }
 
 export type MoveLackingItemsOperationType = 'copy' | 'cut'
+
+export type ItemCategory = {
+  id: number
+  name: string
+}
+
+export type ItemRegisterEntry = {
+  id: number
+  name: string
+  category?: ItemCategory
+}
+
+export type Room = {
+  id: number
+  name: string
+}
+
+export type ItemRegister = {
+  id: number
+  item: ItemRegisterEntry
+  quantity?: number
+  unit?: string
+  unit_display?: string
+  room?: Room
+  place_description?: string
+  last_updated_at: string
+}
+
+export type ItemsRegister = {
+  items: ItemRegister[]
+}

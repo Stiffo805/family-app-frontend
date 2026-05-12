@@ -43,6 +43,7 @@ export const mapRecipeToRecipeInfo = (recipe: Recipe): RecipeInfo => ({
 })
 
 export const convertDateToReadable = (date: string): string => {
+  if (!date) return ''
   const zoneDate = new Date(date)
   return new Intl.DateTimeFormat(undefined, {
     year: 'numeric',
