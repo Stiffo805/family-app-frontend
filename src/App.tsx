@@ -12,6 +12,7 @@ import ProtectedRoutes from '@src/components/ProtectedRoutes'
 import IsAliveProvider from '@src/components/IsAliveProvider'
 import ActivitiesView from '@src/views/activities/ActivitiesView'
 import LackingItemsShoppingListView from '@src/views/shopping/LackingItemsShoppingListView'
+import ItemsRegisterView from '@src/views/itemRegister/ItemsRegisterView'
 
 const router = createBrowserRouter(
   [
@@ -38,6 +39,10 @@ const router = createBrowserRouter(
         {
           path: '/activities',
           Component: ActivitiesView
+        },
+        {
+          path: '/items_register',
+          Component: ItemsRegisterView
         }
       ]
     }

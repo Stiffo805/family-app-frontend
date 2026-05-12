@@ -38,6 +38,15 @@ const IndexView = () => {
           />
           <p>Wymaga logowania</p>
         </nav>
+        <nav>
+          <ButtonWithIcon
+            text='Przejdź do rejestru przedmiotów'
+            icon={ArrowRight}
+            variant='secondary'
+            onClick={() => navigate('/items_register')}
+          />
+          <p>Wymaga logowania</p>
+        </nav>
       </div>
     </div>
   )

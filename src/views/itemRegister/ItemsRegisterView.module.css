@@ -1,0 +1,42 @@
+.itemsRegisterView {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+
+  padding: 50px 0;
+}
+
+.itemsRegisterContainer {
+  background-color: var(--white1);
+
+  width: clamp(360px, 90vw, 1200px);
+  padding: 40px clamp(20px, 5vw, 40px);
+  margin-top: 20px;
+  border-radius: var(--rounded1);
+}
+
+.itemsGridContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+
+  .gridItem {
+    background-color: var(--stone2);
+    padding: 15px;
+    margin: 15px;
+    width: max(calc(50% - 60px), 400px);
+    text-align: center;
+    font-size: clamp(14px, 3vw, 24px);
+  }
+}
+
+.detailsModalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 15px;
+
+  & > p {
+    font-size: 18px;
+  }
+}
