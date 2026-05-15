@@ -61,18 +61,20 @@ const ItemsRegisterView = () => {
             />
           </div>
           <hr />
-          <div className={styles.itemsGridContainer}>
-            {itemsRegister?.items.map((itemRegisterEntry) => (
-              <div
-                className={styles.gridItem}
-                onClick={() => {
-                  setSelectedItem(itemRegisterEntry)
-                  setIsDetailsModalVisible(true)
-                }}
-              >
-                {itemRegisterEntry.item.name}
-              </div>
-            ))}
+          <div className={styles.itemsGridWrapper}>
+            <div className={styles.itemsGridContainer}>
+              {itemsRegister?.items.map((itemRegisterEntry) => (
+                <div
+                  className={styles.gridItem}
+                  onClick={() => {
+                    setSelectedItem(itemRegisterEntry)
+                    setIsDetailsModalVisible(true)
+                  }}
+                >
+                  {itemRegisterEntry.item.name}
+                </div>
+              ))}
+            </div>
           </div>
         </main>
       </div>
