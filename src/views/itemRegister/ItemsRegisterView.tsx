@@ -12,9 +12,7 @@ const ItemsRegisterView = () => {
   const [searchText, setSearchText] = useState('')
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false)
 
-  const { data: itemsRegister } = useGetItemsRegister({
-    searchText
-  })
+  const { data: itemsRegister } = useGetItemsRegister()
 
   const body = (
     <div className={styles.detailsModalBody}>
@@ -63,17 +61,23 @@ const ItemsRegisterView = () => {
           <hr />
           <div className={styles.itemsGridWrapper}>
             <div className={styles.itemsGridContainer}>
-              {itemsRegister?.items.map((itemRegisterEntry) => (
-                <div
-                  className={styles.gridItem}
-                  onClick={() => {
-                    setSelectedItem(itemRegisterEntry)
-                    setIsDetailsModalVisible(true)
-                  }}
-                >
-                  {itemRegisterEntry.item.name}
-                </div>
-              ))}
+              {itemsRegister?.items
+                .filter((item) =>
+                  item.item.name
+                    .toLowerCase()
+                    .includes(searchText.toLowerCase())
+                )
+                .map((itemRegisterEntry) => (
+                  <div
+                    className={styles.gridItem}
+                    onClick={() => {
+                      setSelectedItem(itemRegisterEntry)
+                      setIsDetailsModalVisible(true)
+                    }}
+                  >
+                    {itemRegisterEntry.item.name}
+                  </div>
+                ))}
             </div>
           </div>
         </main>
