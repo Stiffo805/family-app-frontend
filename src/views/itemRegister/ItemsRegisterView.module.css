@@ -13,18 +13,51 @@
   padding: 40px clamp(20px, 5vw, 40px);
   margin-top: 20px;
   border-radius: var(--rounded1);
+
+  header {
+    color: var(--brown1);
+    font-family: var(--ff2);
+    font-weight: var(--fw1);
+    font-size: clamp(18px, 3vw, 28px);
+    margin-left: 15px;
+    margin-bottom: 10px;
+  }
+
+  hr {
+    margin: 0 15px;
+  }
+
+  input {
+    margin-bottom: 10px;
+    font-size: clamp(14px, 2.5vw, 20px);
+    padding: 5px;
+    border-radius: 5px;
+    min-width: 100%;
+  }
+
+  .searchBarContainer {
+    padding: 0 15px;
+  }
+}
+
+.itemsGridWrapper {
+  padding: 15px;
 }
 
 .itemsGridContainer {
+  border: solid 1px;
+  border-radius: 5px;
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  max-height: 500px;
+  overflow-y: auto;
 
   .gridItem {
     background-color: var(--stone2);
     padding: 15px;
     margin: 15px;
-    width: max(calc(50% - 60px), 400px);
+    width: max(calc(50% - 30px), 400px);
     text-align: center;
     font-size: clamp(14px, 3vw, 24px);
   }

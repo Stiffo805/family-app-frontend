@@ -9,9 +9,12 @@ import { useState } from 'react'
 
 const ItemsRegisterView = () => {
   const [selectedItem, setSelectedItem] = useState<ItemRegister | null>(null)
+  const [searchText, setSearchText] = useState('')
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false)
 
-  const { data: itemsRegister } = useGetItemsRegister()
+  const { data: itemsRegister } = useGetItemsRegister({
+    searchText
+  })
 
   const body = (
     <div className={styles.detailsModalBody}>
@@ -48,18 +51,30 @@ const ItemsRegisterView = () => {
       <LogoutButton />
       <div className={styles.itemsRegisterView}>
         <main className={styles.itemsRegisterContainer}>
-          <div className={styles.itemsGridContainer}>
-            {itemsRegister?.items.map((itemRegisterEntry) => (
-              <div
-                className={styles.gridItem}
-                onClick={() => {
-                  setSelectedItem(itemRegisterEntry)
-                  setIsDetailsModalVisible(true)
-                }}
-              >
-                {itemRegisterEntry.item.name}
-              </div>
-            ))}
+          <header>Rejestr przedmiotów</header>
+          <div className={styles.searchBarContainer}>
+            <input
+              type='text'
+              placeholder='Szukaj przedmiotu po nazwie...'
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </div>
+          <hr />
+          <div className={styles.itemsGridWrapper}>
+            <div className={styles.itemsGridContainer}>
+              {itemsRegister?.items.map((itemRegisterEntry) => (
+                <div
+                  className={styles.gridItem}
+                  onClick={() => {
+                    setSelectedItem(itemRegisterEntry)
+                    setIsDetailsModalVisible(true)
+                  }}
+                >
+                  {itemRegisterEntry.item.name}
+                </div>
+              ))}
+            </div>
           </div>
         </main>
       </div>
