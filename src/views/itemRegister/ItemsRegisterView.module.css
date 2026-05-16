@@ -38,6 +38,23 @@
   .searchBarContainer {
     padding: 0 15px;
   }
+
+  .filtersContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    label {
+      font-size: clamp(14px, 2.5vw, 20px);
+    }
+
+    select {
+      font-size: clamp(14px, 2.5vw, 20px);
+      padding: 5px 0;
+    }
+  }
 }
 
 .itemsGridWrapper {

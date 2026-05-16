@@ -84,6 +84,10 @@ export type ItemCategory = {
   name: string
 }
 
+export type ItemsCategoriesResponse = {
+  items: ItemCategory[]
+}
+
 export type ItemRegisterEntry = {
   id: number
   name: string
@@ -93,6 +97,10 @@ export type ItemRegisterEntry = {
 export type Room = {
   id: number
   name: string
+}
+
+export type RoomsResponse = {
+  items: Room[]
 }
 
 export type ItemRegister = {
