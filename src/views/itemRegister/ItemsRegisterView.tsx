@@ -1,4 +1,8 @@
-import { useGetItemsRegister } from '@src/api/itemRegister'
+import {
+  useGetCategories,
+  useGetItemsRegister,
+  useGetRooms
+} from '@src/api/itemRegister'
 import GoBackArrow from '@src/components/common/GoBackArrow'
 import LogoutButton from '@src/components/common/LogoutButton'
 import Modal from '@src/components/common/Modal'
@@ -11,8 +15,14 @@ const ItemsRegisterView = () => {
   const [selectedItem, setSelectedItem] = useState<ItemRegister | null>(null)
   const [searchText, setSearchText] = useState('')
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [selectedRoom, setSelectedRoom] = useState('all')
 
   const { data: itemsRegister } = useGetItemsRegister()
+
+  const { data: rooms } = useGetRooms()
+
+  const { data: categories } = useGetCategories()
 
   const body = (
     <div className={styles.detailsModalBody}>
@@ -58,6 +68,22 @@ const ItemsRegisterView = () => {
               onChange={(e) => setSearchText(e.target.value)}
             />
           </div>
+          <div className={styles.filtersContainer}>
+            <label>Pokaż przedmioty z kategorii:</label>
+            <select onChange={(e) => setSelectedCategory(e.target.value)}>
+              <option value='all'>Wszystkie</option>
+              {categories?.items.map((category) => (
+                <option value={category.id}>{category.name}</option>
+              ))}
+            </select>
+            <label>Pokaż przedmioty z pokoju: </label>
+            <select onChange={(e) => setSelectedRoom(e.target.value)}>
+              <option value='all'>Wszystkie</option>
+              {rooms?.items.map((room) => (
+                <option value={room.id}>{room.name}</option>
+              ))}
+            </select>
+          </div>
           <hr />
           <div className={styles.itemsGridWrapper}>
             <div className={styles.itemsGridContainer}>
@@ -66,6 +92,16 @@ const ItemsRegisterView = () => {
                   item.item.name
                     .toLowerCase()
                     .includes(searchText.toLowerCase())
+                )
+                .filter(
+                  (item) =>
+                    selectedRoom === 'all' ||
+                    String(item.room?.id) === selectedRoom
+                )
+                .filter(
+                  (item) =>
+                    selectedCategory === 'all' ||
+                    String(item.item.category?.id) === selectedCategory
                 )
                 .map((itemRegisterEntry) => (
                   <div
