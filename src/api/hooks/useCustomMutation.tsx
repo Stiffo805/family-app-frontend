@@ -1,7 +1,8 @@
 import { axiosClient } from '@src/api/axios'
+import { OfflineModeContext } from '@src/util/context'
 import type { HttpMethod } from '@src/util/types'
 import { useMutation } from '@tanstack/react-query'
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
 
 type UseCustomMutationProps = {
   method: HttpMethod
@@ -13,7 +14,11 @@ type UseCustomMutationProps = {
   onError?: (...args: any[]) => any
 }
 
-function useCustomMutation<T extends Record<string, unknown>, K>(props: UseCustomMutationProps) {
+function useCustomMutation<T extends Record<string, unknown>, K>(
+  props: UseCustomMutationProps
+) {
+  const offlineModeContext = useContext(OfflineModeContext)
+
   const getFetchFunc = useCallback(() => {
     if (props.method === 'POST') return axiosClient.post
     if (props.method === 'PUT') return axiosClient.put
@@ -23,8 +28,11 @@ function useCustomMutation<T extends Record<string, unknown>, K>(props: UseCusto
   }, [props.method])
 
   // Accept variables directly in the mutation function
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const mutationFunction = (variables?: T) => {
+
+    if (offlineModeContext.offlineMode) return new Promise((resolve) => resolve({}))
+
     const token = localStorage.getItem('authToken')
     const fetchFunc = getFetchFunc()
 
@@ -52,9 +60,8 @@ function useCustomMutation<T extends Record<string, unknown>, K>(props: UseCusto
     ...(props.onError && { onError: props.onError })
   })
 
-  const currentHttpStatus = 
-    mutation.data?.status || 
-    mutation.error?.response?.status
+  const currentHttpStatus =
+    mutation.data?.status || mutation.error?.response?.status
 
   return {
     mutate: mutation.mutate,
@@ -62,7 +69,8 @@ function useCustomMutation<T extends Record<string, unknown>, K>(props: UseCusto
     isError: mutation.isError,
     status: currentHttpStatus,
     reset: mutation.reset,
-    data: mutation.data as K
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    data: mutation.data as K | {}
   }
 }
 

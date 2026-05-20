@@ -1,6 +1,5 @@
 import RecipeView from '@src/views/recipes/RecipeView'
 import styles from '@src/App.module.css'
-import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from '@src/api/queryClient'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router'
 import RecipesView from '@src/views/recipes/RecipesView'
@@ -13,6 +12,11 @@ import IsAliveProvider from '@src/components/IsAliveProvider'
 import ActivitiesView from '@src/views/activities/ActivitiesView'
 import LackingItemsShoppingListView from '@src/views/shopping/LackingItemsShoppingListView'
 import ItemsRegisterView from '@src/views/itemRegister/ItemsRegisterView'
+import { useEffect, useState } from 'react'
+import ButtonWithIcon from '@src/components/common/ButtonWithIcon'
+import { Globe, GlobeOff, Trash2 } from 'lucide-react'
+import { OfflineModeContext } from '@src/util/context'
+import ConfirmationModal from '@src/components/common/ConfirmationModal'
 
 const router = createBrowserRouter(
   [
@@ -53,17 +57,69 @@ const router = createBrowserRouter(
 )
 
 function App() {
+  const [offlineMode, setOfflineMode] = useState(false)
+  const [isConnection, setIsConnection] = useState(false)
+  const [
+    isDeleteOfflineDataButtonDisabled,
+    setIsDeleteOfflineDataButtonDisabled
+  ] = useState(false)
+  const [
+    isDeleteOfflineDataConfirmationModalVisible,
+    setIsDeleteOfflineDataConfirmationModalVisible
+  ] = useState(false)
+
+  const clearLocalData = () => {
+    localStorage.setItem('shoppingLists', '[]')
+    setIsDeleteOfflineDataButtonDisabled(true)
+    queryClient.invalidateQueries()
+  }
+
+  useEffect(() => {
+    queryClient.invalidateQueries()
+  }, [offlineMode])
+
   return (
-    <QueryClientProvider client={queryClient}>
+    <OfflineModeContext.Provider value={{ offlineMode }}>
       <div className={styles.appContainer}>
-        <IsAliveProvider>
+        <header className={styles.appHeader}>
+          <ButtonWithIcon
+            text={
+              offlineMode ? 'Przejdź na tryb online' : 'Przejdź na tryb offline'
+            }
+            disabled={offlineMode && !isConnection}
+            icon={offlineMode ? Globe : GlobeOff}
+            onClick={() => {
+              if (offlineMode) window.location.reload()
+              else setOfflineMode(true)
+            }}
+            variant='primary'
+            margin='15px 0'
+          />
+        </header>
+        <IsAliveProvider setIsConnection={setIsConnection}>
           <RouterProvider router={router} />
-          <footer className={styles.footer}>
-            Design provided by Frontend Mentor
-          </footer>
         </IsAliveProvider>
+        <div className={styles.clearBtnContainer}>
+          <ButtonWithIcon
+            text='Wyczyść dane offline'
+            icon={Trash2}
+            variant='primary'
+            onClick={() => setIsDeleteOfflineDataConfirmationModalVisible(true)}
+            disabled={isDeleteOfflineDataButtonDisabled}
+            margin='0 0 5px 0'
+          />
+        </div>
+        <footer className={styles.footer}>
+          Design provided by Frontend Mentor
+        </footer>
       </div>
-    </QueryClientProvider>
+      <ConfirmationModal
+        isModalVisible={isDeleteOfflineDataConfirmationModalVisible}
+        setIsModalVisible={setIsDeleteOfflineDataConfirmationModalVisible}
+        text='Czy na pewno chcesz wyczyścić wszystkie dane offline?'
+        onSubmit={clearLocalData}
+      />
+    </OfflineModeContext.Provider>
   )
 }
 

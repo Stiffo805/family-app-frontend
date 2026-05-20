@@ -1,6 +1,7 @@
 import useCustomMutation from '@src/api/hooks/useCustomMutation'
 import useCustomQuery from '@src/api/hooks/useCustomQuery'
 import { queryClient } from '@src/api/queryClient'
+import { getAllShoppingListsFromLocalStorage, getShoppingListFromLocalStorage } from '@src/util/localStorageGetters'
 import type {
   LackingShoppingListItemsList,
   ShoppingItem,
@@ -41,14 +42,16 @@ export const useGetAllShoppingLists = () =>
   useCustomQuery<ShoppingListsInfosList>({
     method: 'GET',
     url: '/shopping/lists',
-    queryKey: ['shoppingLists']
+    queryKey: ['shoppingLists'],
+    localStorageDownloadFunction: getAllShoppingListsFromLocalStorage
   })
 
 export const useGetShoppingList = (args: { shoppingListId: number }) =>
   useCustomQuery<ShoppingList>({
     method: 'GET',
     url: `/shopping/lists/${Number(args.shoppingListId)}`,
-    queryKey: [`shoppingList-${Number(args.shoppingListId)}`]
+    queryKey: [`shoppingList-${Number(args.shoppingListId)}`],
+    localStorageDownloadFunction: () => getShoppingListFromLocalStorage(args.shoppingListId)
   })
 
 export const useGetAllShoppingItems = () =>

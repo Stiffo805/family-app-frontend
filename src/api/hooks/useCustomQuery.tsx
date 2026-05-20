@@ -1,12 +1,15 @@
 import { axiosClient } from '@src/api/axios'
+import { OfflineModeContext } from '@src/util/context'
 import type { HttpMethod } from '@src/util/types'
 import { useQuery } from '@tanstack/react-query'
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
 
 type UseCustomQueryProps = {
   method: HttpMethod
   url: string
   readonly queryKey: unknown[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  localStorageDownloadFunction?: (...args: any[]) => any
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSuccess?: (...args: any[]) => any
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,6 +17,8 @@ type UseCustomQueryProps = {
 }
 
 function useCustomQuery<T>(props: UseCustomQueryProps) {
+  const offlineModeContext = useContext(OfflineModeContext)
+
   const getFetchFunc = useCallback(() => {
     if (props.method === 'POST') return axiosClient.post
     if (props.method === 'PUT') return axiosClient.put
@@ -25,6 +30,12 @@ function useCustomQuery<T>(props: UseCustomQueryProps) {
   // Accept variables directly in the mutation function
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const queryFunction = async (variables?: any) => {
+    if (offlineModeContext.offlineMode && props.localStorageDownloadFunction) {
+      return new Promise((resolve) =>
+        resolve(props.localStorageDownloadFunction?.() ?? null)
+      )
+    }
+
     const token = localStorage.getItem('authToken')
     const fetchFunc = getFetchFunc()
 
@@ -42,7 +53,9 @@ function useCustomQuery<T>(props: UseCustomQueryProps) {
     }
 
     // For POST, PUT, PATCH
-    return fetchFunc(props.url, variables, config).then((response) => response.data)
+    return fetchFunc(props.url, variables, config).then(
+      (response) => response.data
+    )
   }
 
   const query = useQuery({
@@ -53,7 +66,7 @@ function useCustomQuery<T>(props: UseCustomQueryProps) {
   })
 
   return {
-    data: query.data as T | undefined,
+    data: query.data as T | undefined | null,
     isLoading: query.isLoading,
     isError: query.isError
   }
