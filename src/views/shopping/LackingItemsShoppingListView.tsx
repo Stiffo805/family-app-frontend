@@ -68,6 +68,8 @@ const LackingItemsShoppingListView = () => {
   const [isNewTagCreationModalVisible, setIsNewTagCreationModalVisible] =
     useState(false)
 
+  const [justCreatedItemId, setJustCreatedItemId] = useState<number | undefined>(undefined)
+
   const shoppingListContainerRef = useRef<HTMLElement>(null)
 
   const {
@@ -505,6 +507,7 @@ const LackingItemsShoppingListView = () => {
         setIsNewProductCreationModalVisible={
           setIsNewProductCreationModalVisible
         }
+        justCreatedItemId={justCreatedItemId}
       />
       <CreateNewShoppingItemModal
         isModalVisible={
@@ -512,6 +515,7 @@ const LackingItemsShoppingListView = () => {
         }
         setIsModalVisible={setIsNewProductCreationModalVisible}
         setIsNewTagCreationModalVisible={setIsNewTagCreationModalVisible}
+        setJustCreatedItemId={setJustCreatedItemId}
       />
       <CreateNewTagModal
         isModalVisible={isNewTagCreationModalVisible}

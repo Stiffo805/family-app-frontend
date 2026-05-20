@@ -30,6 +30,8 @@ const ShoppingListView = () => {
     useState<ShoppingListItemsSortingType>(defaultSorting)
   const [tagIdToFilterBy, setTagIdToFilterBy] = useState<number | null>(null)
 
+  const [justCreatedItemId, setJustCreatedItemId] = useState<number | undefined>(undefined)
+
   const [
     isNewProductCreationModalVisible,
     setIsNewProductCreationModalVisible
@@ -331,6 +333,7 @@ const ShoppingListView = () => {
         setIsNewProductCreationModalVisible={
           setIsNewProductCreationModalVisible
         }
+        justCreatedItemId={justCreatedItemId}
       />
       <CreateNewShoppingItemModal
         isModalVisible={
@@ -338,6 +341,7 @@ const ShoppingListView = () => {
         }
         setIsModalVisible={setIsNewProductCreationModalVisible}
         setIsNewTagCreationModalVisible={setIsNewTagCreationModalVisible}
+        setJustCreatedItemId={setJustCreatedItemId}
       />
       <CreateNewTagModal
         isModalVisible={isNewTagCreationModalVisible}

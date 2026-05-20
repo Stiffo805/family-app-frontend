@@ -3,6 +3,7 @@ import useCustomQuery from '@src/api/hooks/useCustomQuery'
 import { queryClient } from '@src/api/queryClient'
 import type {
   LackingShoppingListItemsList,
+  ShoppingItem,
   ShoppingItemsResponse,
   ShoppingList,
   ShoppingListsInfosList,
@@ -72,15 +73,15 @@ export const useAddShoppingListItemToList = (args: {
     }
   })
 
-export const usePostShoppingListItem = (args: { onSuccess: () => void }) =>
+export const usePostShoppingListItem = (args: { onSuccess: (data: {item: ShoppingItem}) => void }) =>
   useCustomMutation({
     method: 'POST',
     url: '/shopping/items/',
-    onSuccess: () => {
+    onSuccess: (data: {item: ShoppingItem}) => {
       queryClient.invalidateQueries({
         queryKey: ['shoppingItems']
       })
-      args.onSuccess()
+      args.onSuccess(data)
     }
   })
 

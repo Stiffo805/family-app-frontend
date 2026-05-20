@@ -13,7 +13,7 @@ type UseCustomMutationProps = {
   onError?: (...args: any[]) => any
 }
 
-const useCustomMutation = (props: UseCustomMutationProps) => {
+function useCustomMutation<T extends Record<string, unknown>, K>(props: UseCustomMutationProps) {
   const getFetchFunc = useCallback(() => {
     if (props.method === 'POST') return axiosClient.post
     if (props.method === 'PUT') return axiosClient.put
@@ -24,7 +24,7 @@ const useCustomMutation = (props: UseCustomMutationProps) => {
 
   // Accept variables directly in the mutation function
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mutationFunction = (variables?: any) => {
+  const mutationFunction = (variables?: T) => {
     const token = localStorage.getItem('authToken')
     const fetchFunc = getFetchFunc()
 
@@ -38,11 +38,11 @@ const useCustomMutation = (props: UseCustomMutationProps) => {
     // They don't take a 'body' argument as the second parameter.
     if (props.method === 'GET' || props.method === 'DELETE') {
       // For DELETE with body, you'd need { data: variables, headers: ... } inside config
-      return fetchFunc(props.url, config)
+      return fetchFunc(props.url, config).then((res) => res.data)
     }
 
     // For POST, PUT, PATCH
-    return fetchFunc(props.url, variables, config)
+    return fetchFunc(props.url, variables, config).then((res) => res.data)
   }
 
   const mutation = useMutation({
@@ -61,7 +61,8 @@ const useCustomMutation = (props: UseCustomMutationProps) => {
     isPending: mutation.isPending,
     isError: mutation.isError,
     status: currentHttpStatus,
-    reset: mutation.reset
+    reset: mutation.reset,
+    data: mutation.data as K
   }
 }
 

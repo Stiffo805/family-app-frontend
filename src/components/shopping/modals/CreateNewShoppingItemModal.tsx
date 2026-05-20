@@ -10,6 +10,7 @@ type CreateNewShoppingItemModalProps = {
   isModalVisible: boolean
   setIsModalVisible: Dispatch<SetStateAction<boolean>>
   setIsNewTagCreationModalVisible: Dispatch<SetStateAction<boolean>>
+  setJustCreatedItemId: Dispatch<SetStateAction<number | undefined>>
 }
 
 const CreateNewShoppingItemModal = (props: CreateNewShoppingItemModalProps) => {
@@ -22,8 +23,9 @@ const CreateNewShoppingItemModal = (props: CreateNewShoppingItemModalProps) => {
     isError: isCreateItemError,
     reset: resetErrors
   } = usePostShoppingListItem({
-    onSuccess: () => {
+    onSuccess: (data) => {
       props.setIsModalVisible(false)
+      props.setJustCreatedItemId(data.item.id)
       setCheckedTags([])
     }
   })
