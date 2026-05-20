@@ -45,6 +45,7 @@ export type ShoppingList = ShoppingListInfo & {
 export type ShoppingItem = {
   id: number
   name: string
+  tags: Tag[]
 }
 
 export type ShoppingItemsResponse = {

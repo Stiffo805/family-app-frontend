@@ -10,6 +10,7 @@ type ButtonConfig = {
   color?: string
   type: 'submit' | 'button'
   form?: string
+  disabled?: boolean
 }
 
 export type ModalFooterConfig = {
@@ -62,6 +63,7 @@ const Modal = (props: ModalProps) => {
           <div className={styles.footer}>
             {props.footerConfig.buttons.map((btn) => (
               <button
+                disabled={!!btn.disabled}
                 type={btn.type}
                 form={btn.form ? btn.form : undefined}
                 style={{
