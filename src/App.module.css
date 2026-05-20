@@ -2,6 +2,16 @@
   background-color: var(--stone1);
   min-height: 100vh;
   font-family: var(--ff1);
+
+  .appHeader {
+    margin-left: 50px;
+  }
+}
+
+.clearBtnContainer {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
 }
 
 .footer {

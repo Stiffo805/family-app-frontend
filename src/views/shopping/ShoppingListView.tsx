@@ -6,21 +6,32 @@ import Spinner from '@src/components/common/Spinner'
 import commonStyles from '@src/commonStyles/ShoppingListViewCommonStyles.module.css'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
-import { Download, Pencil, PencilOff, Plus } from 'lucide-react'
-import { useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router'
+import { Download, Pencil, PencilOff, Plus, Save, Trash2 } from 'lucide-react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
-import type { ShoppingListEntry } from '@src/util/types'
+import type { ShoppingList, ShoppingListEntry } from '@src/util/types'
 import { useGetAllTags, useGetShoppingList } from '@src/api/shopping'
 import AddItemToShoppingListModal from '@src/components/shopping/modals/AddItemToShoppingListModal'
 import CreateNewShoppingItemModal from '@src/components/shopping/modals/CreateNewShoppingItemModal'
 import CreateNewTagModal from '@src/components/shopping/modals/CreateNewTagModal'
+import { OfflineModeContext } from '@src/util/context'
+import { queryClient } from '@src/api/queryClient'
+import ConfirmationModal from '@src/components/common/ConfirmationModal'
 
 export type ShoppingListItemsSortingType = 'alphabetically' | 'timestamp'
 const defaultSorting: ShoppingListItemsSortingType = 'alphabetically'
 
 const ShoppingListView = () => {
   const params = useParams()
+  const navigate = useNavigate()
+
+  const offlineModeContext = useContext(OfflineModeContext)
+
+  const [
+    saveToLocalStorageButtonDisabled,
+    setSaveToLocalStorageButtonDisabled
+  ] = useState(offlineModeContext.offlineMode)
 
   const [isPdfDownloading, setIsPdfDownloading] = useState(false)
   const [isDocxDownloading, setIsDocxDownloading] = useState(false)
@@ -30,7 +41,9 @@ const ShoppingListView = () => {
     useState<ShoppingListItemsSortingType>(defaultSorting)
   const [tagIdToFilterBy, setTagIdToFilterBy] = useState<number | null>(null)
 
-  const [justCreatedItemId, setJustCreatedItemId] = useState<number | undefined>(undefined)
+  const [justCreatedItemId, setJustCreatedItemId] = useState<
+    number | undefined
+  >(undefined)
 
   const [
     isNewProductCreationModalVisible,
@@ -39,6 +52,11 @@ const ShoppingListView = () => {
 
   const [isNewTagCreationModalVisible, setIsNewTagCreationModalVisible] =
     useState(false)
+
+  const [
+    isDeleteListFromLocalStorageConfirmationModalVisible,
+    setIsDeleteListFromLocalStorageConfirmationModalVisible
+  ] = useState(false)
 
   const shoppingListContainerRef = useRef<HTMLElement>(null)
 
@@ -175,6 +193,46 @@ const ShoppingListView = () => {
     setIsDocxDownloading(false)
   }
 
+  const saveShoppingListToLocalStorage = () => {
+    if (!offlineModeContext.offlineMode && shoppingListData) {
+      const currentLists = JSON.parse(
+        localStorage.getItem('shoppingLists') ?? '[]'
+      ) as ShoppingList[]
+      const listIndex = currentLists
+        .map((l) => l.id)
+        .indexOf(shoppingListData.id)
+      if (listIndex === -1) {
+        currentLists.push(shoppingListData)
+      } else {
+        currentLists[listIndex] = shoppingListData
+      }
+      localStorage.setItem('shoppingLists', JSON.stringify(currentLists))
+      setSaveToLocalStorageButtonDisabled(true)
+    }
+  }
+
+  const removeShoppingListFromLocalStorage = () => {
+    if (offlineModeContext.offlineMode && shoppingListData) {
+      const currentLists = JSON.parse(
+        localStorage.getItem('shoppingLists') ?? '[]'
+      ) as ShoppingList[]
+      const listIndex = currentLists
+        .map((l) => l.id)
+        .indexOf(shoppingListData.id)
+      if (listIndex !== -1) {
+        currentLists.splice(listIndex, 1)
+      }
+      localStorage.setItem('shoppingLists', JSON.stringify(currentLists))
+      queryClient.invalidateQueries()
+    }
+  }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSaveToLocalStorageButtonDisabled(false)
+    if (shoppingListData === null) navigate('/shopping')
+  }, [shoppingListData])
+
   const sortingCompareFunction = useMemo(() => {
     if (sorting === 'alphabetically')
       return (entry1: ShoppingListEntry, entry2: ShoppingListEntry) =>
@@ -214,6 +272,9 @@ const ShoppingListView = () => {
               className={commonStyles.shoppingListContainer}
               ref={shoppingListContainerRef}
             >
+              {offlineModeContext.offlineMode && (
+                <p>(W trybie offline lista jest tylko do odczytu)</p>
+              )}
               <div
                 className={`${commonStyles.mainHeaderContainer} pdf-element`}
               >
@@ -241,6 +302,28 @@ const ShoppingListView = () => {
                   onClick={handleDownloadDocx}
                   disabled={isDocxDownloading}
                 />
+                {offlineModeContext.offlineMode ? (
+                  <ButtonWithIcon
+                    icon={Trash2}
+                    iconSize={16}
+                    text='Usuń listę z list offline'
+                    variant='primary'
+                    onClick={() =>
+                      setIsDeleteListFromLocalStorageConfirmationModalVisible(
+                        true
+                      )
+                    }
+                  />
+                ) : (
+                  <ButtonWithIcon
+                    icon={Save}
+                    iconSize={16}
+                    text='Zapisz/zaktualizuj listę offline'
+                    variant='primary'
+                    onClick={saveShoppingListToLocalStorage}
+                    disabled={saveToLocalStorageButtonDisabled}
+                  />
+                )}
               </div>
               <section className='pdf-element'>
                 <header>Opis: </header>
@@ -346,6 +429,14 @@ const ShoppingListView = () => {
       <CreateNewTagModal
         isModalVisible={isNewTagCreationModalVisible}
         setIsModalVisible={setIsNewTagCreationModalVisible}
+      />
+      <ConfirmationModal
+        isModalVisible={isDeleteListFromLocalStorageConfirmationModalVisible}
+        setIsModalVisible={
+          setIsDeleteListFromLocalStorageConfirmationModalVisible
+        }
+        text='Czy na pewno chcesz usunąć tę listę z list offline?'
+        onSubmit={removeShoppingListFromLocalStorage}
       />
     </>
   )

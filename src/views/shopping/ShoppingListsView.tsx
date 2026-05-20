@@ -6,14 +6,18 @@ import ShoppingListTile from '@src/components/shopping/ShoppingListTile'
 import Spinner from '@src/components/common/Spinner'
 import styles from '@src/views/shopping/ShoppingListsView.module.css'
 import { useGetAllShoppingLists } from '@src/api/shopping'
+import { useContext } from 'react'
+import { OfflineModeContext } from '@src/util/context'
 
 const ShoppingListsView = () => {
+  const offlineModeContext = useContext(OfflineModeContext)
+
   const { data, isLoading } = useGetAllShoppingLists()
 
   return (
     <div className={styles.mainContainer}>
       <LogoutButton />
-      <GoBackArrow targetUrl='/' left='10px' />
+      <GoBackArrow targetUrl='/' />
       {isLoading ? (
         <Spinner />
       ) : (
@@ -23,7 +27,9 @@ const ShoppingListsView = () => {
           </div>
           <p className={styles.listTypeHeader}>Listy specjalne</p>
           <div className={styles.shoppingListsTilesContainer}>
-            <LackingItemsShoppingListTile />
+            {!offlineModeContext.offlineMode && (
+              <LackingItemsShoppingListTile />
+            )}
           </div>
           <p className={styles.listTypeHeader}>Listy użytkownika</p>
           <div className={styles.shoppingListsTilesContainer}>
