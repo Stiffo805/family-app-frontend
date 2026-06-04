@@ -20,7 +20,7 @@ type AddItemToShoppingListModalProps = {
 
 type AddItemToShoppingListFormData = {
   itemId: number | undefined
-  quantity?: number
+  quantity?: number | ''
   unit?: string
   extraNotes?: string
 }
@@ -64,9 +64,17 @@ const AddItemToShoppingListModal = (props: AddItemToShoppingListModalProps) => {
   })
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (props.justCreatedItemId) setFormData((cur) => ({ ...cur, itemId: props.justCreatedItemId }))
+    if (props.justCreatedItemId)
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setFormData((cur) => ({ ...cur, itemId: props.justCreatedItemId }))
   }, [props.justCreatedItemId])
+
+  useEffect(() => {
+    if (!props.isModalVisible) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setFormData(initialFormData)
+    }
+  }, [props.isModalVisible])
 
   const body = (
     <div className={commonModalsStyles.modalBody}>
@@ -79,14 +87,14 @@ const AddItemToShoppingListModal = (props: AddItemToShoppingListModalProps) => {
           if (props.shoppingListId)
             addItemToList({
               item_id: formData.itemId,
-              quantity: formData.quantity,
+              quantity: formData.quantity === '' ? 0 : formData.quantity,
               unit: formData.unit,
               extra_notes: formData.extraNotes
             })
           else
             createLackingItem({
               item_id: formData.itemId,
-              quantity: formData.quantity,
+              quantity: formData.quantity === '' ? 0 : formData.quantity,
               unit: formData.unit,
               extra_notes: formData.extraNotes
             })
@@ -128,9 +136,12 @@ const AddItemToShoppingListModal = (props: AddItemToShoppingListModalProps) => {
           step={0.01}
           name='quantity'
           value={formData.quantity}
-          onChange={(e) =>
-            setFormData((cur) => ({ ...cur, quantity: Number(e.target.value) }))
-          }
+          onChange={(e) => {
+            setFormData((cur) => ({
+              ...cur,
+              quantity: e.target.value === '' ? '' : Number(e.target.value)
+            }))
+          }}
         />
         <p>Jednostka:</p>
         <select
